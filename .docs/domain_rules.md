@@ -1,56 +1,70 @@
-# Luật nghiệp vụ
+# Business rules
 
-File này là **source of truth cho `src/domain/`**. Mỗi luật ở đây phải có một hàm và
-một test tương ứng. Đổi luật → sửa file này **trong cùng commit** với code và test.
+This file is the **source of truth for `src/domain/`**. Every rule here has a function
+and a test. Changing a rule means changing this file **in the same commit** as the code
+and the test.
 
-Nếu một luật chỉ nằm trong đầu bạn hoặc chỉ nằm trong một component, nó không phải
-luật — nó là bug đang chờ.
+A rule that lives only in your head, or only inside a component, is not a rule — it is a
+bug waiting to happen.
 
 ---
 
-## 1. Ràng buộc chung (`src/domain/constraints.ts`)
+## 1. Shared invariants (`src/domain/constraints.ts`)
 
-Đây là định nghĩa "dữ liệu hợp lệ". Store assert ở ranh giới ghi; UI validate cùng
-những luật này **trước khi** submit, với thông báo thân thiện. Vì vậy một
-`DomainConstraintError` lúc chạy **luôn là bug lập trình**, không bao giờ là lỗi
-người dùng nhập.
+This is the definition of "valid data". The store asserts at the write boundary; the UI
+validates the same rules **before** submitting, with friendly messages. That is what
+makes a `DomainConstraintError` at runtime **always a programming bug** and never a user
+typo.
 
-| Ràng buộc | Ý nghĩa |
+| Constraint | Meaning |
 |---|---|
-| `isPositiveNumber` / `isNonNegativeNumber` | `NaN` và `Infinity` **không phải** số hợp lệ |
-| `isDayKey` | Đúng dạng `yyyy-MM-dd`, có đệm số 0, tháng 1–12, ngày 1–31 |
-| `isMonthKey` | Đúng dạng `yyyy-MM` |
-| `isNonBlank` | Chuỗi toàn khoảng trắng bị coi là rỗng |
+| `isPositiveNumber` / `isNonNegativeNumber` | `NaN` and `Infinity` are **not** valid numbers |
+| `isDayKey` | Exactly `yyyy-MM-dd`, zero-padded, month 1–12, day 1–31 |
+| `isMonthKey` | Exactly `yyyy-MM` |
+| `isNonBlank` | A whitespace-only string counts as empty |
 
-## 2. Ngày tháng (`src/domain/dates.ts`)
+## 2. Dates (`src/domain/dates.ts`)
 
-- Mọi ngày lưu trữ là **chuỗi key** `yyyy-MM-dd` / `yyyy-MM`, không phải `Date`. Đối
-  tượng `Date` mang theo múi giờ, và một bản ghi tạo lúc 23:30 sẽ nhảy sang ngày khác
-  khi người dùng đi công tác.
-- Key có đệm số 0 nên so sánh trực tiếp bằng `<`, `>`, `===` là đúng — không cần hàm
-  so sánh riêng.
-- Hiển thị luôn qua `Intl.DateTimeFormat(i18n.language, ...)`, không hardcode tên
-  tháng.
+- Every stored date is a **string key**, `yyyy-MM-dd` or `yyyy-MM`, never a `Date`. A
+  `Date` carries a timezone, and a record created at 23:30 lands on a different day once
+  the user travels.
+- Keys are zero-padded, so `<`, `>` and `===` compare them correctly — no dedicated
+  comparison helpers needed.
+- Display always goes through `Intl.DateTimeFormat(i18n.language, ...)`. No hardcoded
+  month names.
 
-## 3. <Luật nghiệp vụ của bạn>
+## 3. Backup (`src/domain/backup.ts`)
 
-Với mỗi luật, ghi đủ ba thứ:
+- A backup carries **everything the app owns**, including the localStorage scalars. A
+  restore that brought back the records but lost the profile and the language would not
+  be a restore.
+- A file is **validated completely before any of it is applied**. Every record goes
+  through the same asserts the store uses, plus a duplicate-id check — duplicates would
+  silently collapse on `bulkPut` and land fewer records than the file claims.
+- `hasCompletedOnboarding` is forced to `true` on restore. Restoring it as `false` would
+  bounce the user back into onboarding with their data already loaded.
+- Each failure mode has its own message. A single "invalid file" does not tell the user
+  whether to look for a different file or give up on this one.
 
-**Công thức / quy tắc.** Viết bằng lời hoặc bằng ký hiệu, không dán code.
+## 4. <Your business rule>
 
-**Trường hợp biên.** Chia cho 0, danh sách rỗng, tháng có 28/29/30/31 ngày, giá trị
-âm, số quá lớn. Trường hợp biên nào không có test thì coi như chưa quyết định.
+For each rule, record three things:
 
-**Vì sao là luật này chứ không phải luật kia.** Đây là phần code không nói được.
+**The formula or rule.** In words or notation. Do not paste code.
 
-Ví dụ khung:
+**The edge cases.** Division by zero, empty collections, months of 28/29/30/31 days,
+negative values, numbers too large. An edge case without a test is an undecided one.
 
-> ### 3.1 <Tên luật>
+**Why this rule and not another.** This is the part the code cannot say.
+
+A skeleton:
+
+> ### 4.1 <Rule name>
 >
-> `<đầu ra> = <biểu thức>`
+> `<output> = <expression>`
 >
-> - Khi `<mẫu số>` bằng 0 → trả về `<giá trị>`, không phải `NaN`.
-> - Làm tròn: chỉ làm tròn ở **biên hiển thị**, không bao giờ làm tròn giữa phép tính.
-> - Chọn cách này vì ... . Phương án `<B>` bị loại vì ... .
+> - When `<denominator>` is 0 → return `<value>`, not `NaN`.
+> - Rounding: only at the **display boundary**, never mid-calculation.
+> - Chosen because ... . Option `<B>` was rejected because ... .
 >
 > Code: `src/domain/<module>.ts` · Test: `src/domain/<module>.test.ts`

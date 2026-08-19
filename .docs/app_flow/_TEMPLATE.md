@@ -1,29 +1,30 @@
-# <NN>. <Tên luồng>
+# <NN>. <Flow name>
 
-## Vào luồng từ đâu
+## How the flow is entered
 
-- Từ màn nào, do hành động gì, hoặc do điều kiện gì (guard, deep link, thông báo).
+- From which screen, by what action, or under what condition (a guard, a deep link, a
+  notification).
 
-## Các bước
+## Steps
 
-| # | Màn hình | Route | Người dùng làm gì | Đi tiếp đâu |
+| # | Screen | Route | What the user does | Where it leads |
 |---|---|---|---|---|
 | 1 | | | | |
 | 2 | | | | |
 
-## State UI từng màn
+## UI states per screen
 
-| Màn hình | Loading | Empty | Content | Error |
+| Screen | Loading | Empty | Content | Error |
 |---|---|---|---|---|
 | | | | | |
 
-## Thoát luồng
+## How the flow is left
 
-- Thành công → ...
-- Hủy giữa chừng → ... (dữ liệu đã nhập còn hay mất? nói rõ.)
-- Back cứng của trình duyệt / vuốt cạnh trái iOS → ...
+- On success → ...
+- On cancel part-way → ... (does entered data survive? say so explicitly.)
+- On browser back / iOS edge swipe → ...
 
-## Ghi chú
+## Notes
 
-- Hành động phá hủy nào cần dialog xác nhận.
-- Chỗ nào bàn phím che nội dung (xem `src/pwa/viewportInsets.ts`).
+- Which destructive actions need a confirmation dialog.
+- Where the keyboard covers content (see `src/pwa/viewportInsets.ts`).

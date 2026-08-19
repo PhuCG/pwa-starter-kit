@@ -1,55 +1,57 @@
-# <PROJECT NAME> — Tài liệu
+# <PROJECT NAME> — Documentation
 
-Repo này là **source of truth** cho hành vi sản phẩm. Khi code và doc mâu thuẫn, doc
-mô tả ý định — hãy sửa cái sai, đừng im lặng bỏ qua.
+This repo is the **source of truth** for product behaviour. Where the code and the docs
+disagree, the docs record the intent — fix whichever one is wrong, but never leave the
+disagreement standing.
 
-Doc ghi lại **hành vi và lý do**, không chép lại code. Nếu một đoạn doc chỉ đúng khi
-đọc kèm code thì nó thuộc về comment trong code, không thuộc về đây.
+Docs describe **behaviour and reasoning**, not the code. If a passage only makes sense
+with the code open beside it, it belongs in a comment, not here.
 
 ---
 
-## Bản đồ tài liệu
+## Map
 
-| Thư mục / file | Nội dung | Vai trò |
+| Directory / file | Contents | Role |
 |---|---|---|
-| [features/](./features/) | Trạng thái + doc chi tiết từng tính năng | **Cập nhật mỗi lần đổi code** |
-| [app_flow/](./app_flow/) | Luồng điều hướng, màn hình, state UI | Spec hành vi |
-| [domain_rules.md](./domain_rules.md) | Mọi luật nghiệp vụ + ràng buộc validation | Source of truth cho `src/domain/` |
-| [decisions/](./decisions/) | ADR — quyết định kiến trúc và cái đã bị loại | Lịch sử lý do |
-| [theme/design-system.md](./theme/design-system.md) | Design system: màu, typography, spacing | Nguồn của `src/styles/tokens.css` |
+| [features/](./features/) | Per-feature status and detail | **Updated on every code change** |
+| [app_flow/](./app_flow/) | Navigation, screens, UI states | Behaviour spec |
+| [domain_rules.md](./domain_rules.md) | Every business rule and validation constraint | Source of truth for `src/domain/` |
+| [decisions/](./decisions/) | ADRs — architectural decisions and what was rejected | The record of why |
+| [theme/design-system.md](./theme/design-system.md) | Colour, typography, spacing, dark theme | The source of `src/styles/tokens.css` |
 
-Thư mục nên thêm khi dự án cần: `screenshots/` (ảnh tham chiếu), `research/`
-(phỏng vấn, phân tích đối thủ), `revenue/` (mô hình doanh thu).
+Add as the project needs them: `screenshots/` (visual reference), `research/`
+(interviews, competitive analysis), `revenue/` (business model).
 
 ---
 
-## Luật cập nhật docs (bắt buộc)
+## Documentation rules (non-negotiable)
 
-Mỗi lần thay đổi hành vi tính năng, doc phải đi cùng commit đó — không để "viết sau".
+Every change to feature behaviour ships its doc in the same commit. Not "later".
 
-1. **Đổi/thêm tính năng** → cập nhật `features/<feature>.md` (tạo mới từ
-   [`features/_TEMPLATE.md`](./features/_TEMPLATE.md) nếu chưa có) và bảng trạng thái
-   trong [`features/README.md`](./features/README.md).
-2. **Đổi luật nghiệp vụ** → cập nhật [`domain_rules.md`](./domain_rules.md) trong
-   **cùng commit** với thay đổi trong `src/domain/` và test tương ứng.
-3. **Đổi luồng màn hình / route / state UI** → cập nhật file tương ứng trong
+1. **Feature added or changed** → update `features/<feature>.md` (create it from
+   [`features/_TEMPLATE.md`](./features/_TEMPLATE.md) if missing) and its row in
+   [`features/README.md`](./features/README.md).
+2. **Business rule changed** → update [`domain_rules.md`](./domain_rules.md) in the
+   **same commit** as the change to `src/domain/` and its test.
+3. **Route, screen or UI state changed** → update the matching file in
    [`app_flow/`](./app_flow/).
-4. **Đổi token thiết kế** → cập nhật [`theme/design-system.md`](./theme/design-system.md).
-5. **Quyết định có phương án thay thế thật sự** (chọn A thay vì B, đánh đổi gì) → viết
-   một ADR trong [`decisions/`](./decisions/).
-6. **Ràng buộc toàn dự án hoặc thứ cố tình không làm** → thành một luật đánh số trong
-   [`../CLAUDE.md`](../CLAUDE.md), và ghi vào mục **Quyết định** của doc feature.
+4. **Design token changed** → update
+   [`theme/design-system.md`](./theme/design-system.md).
+5. **A decision with a real alternative** (chose A over B, and what it costs) → write an
+   ADR in [`decisions/`](./decisions/).
+6. **A project-wide constraint, or something deliberately not built** → a numbered rule
+   in [`../CLAUDE.md`](../CLAUDE.md), plus the **Decisions** section of the feature doc.
 
 ---
 
-## Ghi chú riêng của dự án
+## Project-specific notes
 
-Liệt kê những điểm dự án **cố ý** làm khác thông lệ, để không ai "sửa lại cho đúng":
+List what this project does **deliberately** differently, so nobody "corrects" it:
 
-- **Local-first, không backend.** Không auth, không đồng bộ. Guard chỉ kiểm tra
-  `hasCompletedOnboarding`. Xem [ADR 001](./decisions/001-local-first-no-backend.md).
-- **File sao lưu JSON là bản duy nhất người dùng sở hữu.** Một file phải hợp lệ
-  *toàn bộ* mới được áp — không khôi phục một nửa.
-- **Dark theme chỉ đọc từ `data-theme`**, không dùng `prefers-color-scheme` trong CSS.
-  Lý do và cách hoạt động: [theme/design-system.md](./theme/design-system.md).
-- **<Điểm khác biệt khác — xóa dòng này nếu không có.>**
+- **Local-first, no backend.** No auth, no sync. The only guard is
+  `hasCompletedOnboarding`. See [ADR 001](./decisions/001-local-first-no-backend.md).
+- **The JSON backup file is the only copy the user owns.** A file must be valid in full
+  before any of it is applied — there is no half restore.
+- **Dark theme reads only `data-theme`**, never `prefers-color-scheme` in CSS. How and
+  why: [theme/design-system.md](./theme/design-system.md).
+- **<Your next difference — delete this line if there is none.>**

@@ -31,7 +31,12 @@ export const APP = {
   storagePrefix: 'app_v1',
   /** IndexedDB database name. Changing it after ship orphans existing data. */
   dbName: 'pwa_starter',
-  defaultLocale: 'vi',
+  /**
+   * Last-resort locale: what a browser whose language we do not ship falls back
+   * to. Not the locale most users get — `detectLocale` reads `navigator.language`
+   * first. `npm run init --locale <tag>` changes it along with `<html lang>`.
+   */
+  defaultLocale: 'en',
 } as const
 
 /** `app_v1_foo` — the only way a storage key should ever be built. */

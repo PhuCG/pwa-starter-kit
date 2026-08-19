@@ -42,7 +42,12 @@ function parseArgs(argv) {
 
 const args = parseArgs(process.argv.slice(2))
 
-/** `Sổ Thói Quen` → `so-thoi-quen`; the package name and the URL-ish identity. */
+/**
+ * `Habit Log` → `habit-log`; the package name and the URL-ish identity.
+ *
+ * Non-ASCII names are folded rather than rejected, so a product named in the
+ * team's own language still yields a usable slug: `Sổ Thói Quen` → `so-thoi-quen`.
+ */
 const toSlug = (s) =>
   s
     // Đ/đ is a distinct letter, not D plus a diacritic, so NFD leaves it alone

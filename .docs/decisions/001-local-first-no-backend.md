@@ -1,42 +1,40 @@
-# 001. Local-first, không backend
+# 001. Local-first, no backend
 
-> Trạng thái: Accepted
-> Ngày: <YYYY-MM-DD>
+> Status: Accepted
+> Date: <YYYY-MM-DD>
 
-## Bối cảnh
+## Context
 
-Ứng dụng cá nhân, một người dùng một thiết bị, không có nhu cầu chia sẻ dữ liệu giữa
-người dùng. Có backend nghĩa là: chi phí hạ tầng hàng tháng, đăng nhập, chính sách
-riêng tư, và một điểm chết khi mạng hỏng.
+A personal app: one user, one device, no need to share data between people. A backend
+would mean monthly infrastructure cost, sign-in, a privacy policy, and a single point of
+failure whenever the network is down.
 
-## Quyết định
+## Decision
 
-Toàn bộ dữ liệu nằm trong IndexedDB (Dexie) trên máy người dùng. Không auth, không
-đồng bộ, không server.
+All data lives in IndexedDB (Dexie) on the user's device. No auth, no sync, no server.
 
-## Phương án đã cân nhắc
+## Alternatives considered
 
-| Phương án | Vì sao không chọn |
+| Option | Why not |
 |---|---|
-| Firebase / Supabase | Có auth + đồng bộ, nhưng kéo theo chi phí, phụ thuộc mạng, và trách nhiệm giữ dữ liệu người khác |
-| localStorage | Đồng bộ, chặn main thread, giới hạn ~5MB, không có index |
-| Chỉ giữ trong bộ nhớ + export tay | Mất dữ liệu mỗi lần đóng tab |
+| Firebase / Supabase | Brings auth and sync, but also cost, a network dependency, and responsibility for other people's data |
+| localStorage | Synchronous, blocks the main thread, roughly 5MB, no indexes |
+| In memory plus manual export | Loses everything when the tab closes |
 
-## Hệ quả
+## Consequences
 
-**Được:** chạy offline hoàn toàn, không chi phí vận hành, không rủi ro rò rỉ dữ liệu
-người dùng vì chúng tôi không giữ gì cả, khởi động nhanh vì không đợi mạng.
+**Gained:** works fully offline; nothing to operate; no risk of leaking user data because
+we hold none; instant startup because nothing waits on the network.
 
-**Mất:** không dùng được trên nhiều thiết bị. Không khôi phục được nếu người dùng mất
-máy.
+**Given up:** no multi-device use. Nothing to recover from if the user loses the device.
 
-**Trở nên khó hơn về sau:** trình duyệt **có quyền xóa** IndexedDB khi máy thiếu dung
-lượng, và mất là mất vĩnh viễn. Ba lớp phòng thủ bắt buộc phải có:
+**Made harder later:** the browser **is allowed to evict** IndexedDB when the device runs
+low on space, and eviction is permanent. Three defences are therefore mandatory:
 
-1. `navigator.storage.persist()` lúc khởi động — chỉ hiệu lực trên Chromium/Firefox.
-2. Trên iOS Safari, quyền miễn xóa chỉ đến khi người dùng **cài PWA ra màn hình
-   chính** → thẻ mời cài đặt không phải là marketing, nó là biện pháp bảo vệ dữ liệu.
-3. Export JSON thủ công là bản sao lưu duy nhất người dùng thật sự sở hữu.
+1. `navigator.storage.persist()` at startup — effective on Chromium and Firefox only.
+2. On iOS Safari the eviction exemption arrives only when the user **installs the PWA to
+   the home screen** → the install card is a data-protection measure, not marketing.
+3. The JSON export is the only backup the user genuinely owns.
 
-Thêm đồng bộ sau này sẽ tốn: mọi bảng đều cần khóa hợp nhất và dấu thời gian ghi, thứ
-mà schema hiện tại không có.
+Adding sync later will cost: every table would need a merge key and a write timestamp,
+neither of which the current schema has.

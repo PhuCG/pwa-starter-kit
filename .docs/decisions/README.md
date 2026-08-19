@@ -1,15 +1,15 @@
 # Architecture Decision Records
 
-Một ADR cho mỗi quyết định **có phương án thay thế thật sự** và **khó đảo ngược**.
-Không viết ADR cho việc chọn tên biến; viết cho việc chọn Dexie thay vì
-localStorage, chọn local-first thay vì có backend, chọn zustand thay vì Redux.
+One ADR per decision that had a **real alternative** and is **hard to reverse**. Not for
+naming a variable; for choosing Dexie over localStorage, local-first over a backend,
+zustand over Redux.
 
-Đặt tên `NNN-<slug>.md`, đánh số tăng dần, không dùng lại số đã dùng.
+Name them `NNN-<slug>.md`, numbered upward, never reusing a number.
 
-ADR **không sửa nội dung sau khi đã chấp nhận**. Khi đổi ý, viết ADR mới và đánh dấu
-cái cũ là `Superseded by NNN`. Giá trị của ADR nằm ở chỗ nó ghi lại điều bạn *đã tin*
-lúc đó, kể cả khi hóa ra sai.
+An ADR is **not edited after it is accepted**. When you change your mind, write a new one
+and mark the old `Superseded by NNN`. The value of an ADR is that it records what you
+believed at the time — including when that turned out to be wrong.
 
-| # | Quyết định | Trạng thái |
+| # | Decision | Status |
 |---|---|---|
-| [001](./001-local-first-no-backend.md) | Local-first, không backend | Accepted |
+| [001](./001-local-first-no-backend.md) | Local-first, no backend | Accepted |

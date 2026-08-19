@@ -1,23 +1,24 @@
-# Luồng màn hình
+# App flows
 
-Mỗi file mô tả một luồng: route, thứ tự màn hình, điều kiện chuyển, và state UI của
-từng màn. Đặt tên `NN_<slug>.md` để thứ tự file khớp thứ tự người dùng gặp.
+Each file describes one flow: its routes, the order of its screens, the conditions that
+move between them, and the UI states of each screen. Name them `NN_<slug>.md` so the
+file order matches the order a user meets them.
 
-| File | Luồng |
+| File | Flow |
 |---|---|
-| [_TEMPLATE.md](./_TEMPLATE.md) | Mẫu để copy |
-| `01_onboarding.md` | <chưa viết> |
-| `02_home.md` | <chưa viết> |
+| [_TEMPLATE.md](./_TEMPLATE.md) | Copy this |
+| `01_onboarding.md` | <not written> |
+| `02_home.md` | <not written> |
 
-## Bản đồ route hiện tại
+## Current route map
 
-Nguồn: [`src/routes.tsx`](../../src/routes.tsx). Guard duy nhất là
-`profile.hasCompletedOnboarding` — không màn hình nào được tự redirect từ trong render
-của nó.
+Source: [`src/routes.tsx`](../../src/routes.tsx). The only guard is
+`profile.hasCompletedOnboarding` — no screen redirects from inside its own render, so
+there is never a second guard to disagree with it.
 
-| Route | Trong shell? | Màn hình |
+| Route | In the shell? | Screen |
 |---|---|---|
-| `/onboarding` | không | `OnboardingPage` |
-| `/` | có | `HomePage` |
-| `/settings` | có | `SettingsPage` |
-| `*` | — | redirect về `/` |
+| `/onboarding` | no | `OnboardingPage` |
+| `/` | yes | `HomePage` |
+| `/settings` | yes | `SettingsPage` |
+| `*` | — | redirect to `/` |

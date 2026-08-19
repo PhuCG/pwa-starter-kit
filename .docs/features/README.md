@@ -1,44 +1,44 @@
-# Tính năng — trạng thái
+# Feature status
 
-Bảng này là **danh sách kiểm tra sống**. Mỗi PR đụng vào một tính năng phải cập nhật
-dòng tương ứng ở đây trong cùng commit.
+This table is a **living checklist**. Any PR that touches a feature updates its row here
+in the same commit.
 
-- Cột **Code**: ✅ hoàn thành · 🚧 một phần · ❌ chưa làm
-- Cột **Doc**: đường dẫn tới doc chi tiết, hoặc "—" nếu chưa viết. Lần tới sửa tính
-  năng đó thì viết doc từ [`_TEMPLATE.md`](./_TEMPLATE.md) trước khi merge.
+- **Code**: ✅ done · 🚧 partial · ❌ not built
+- **Doc**: link to the detail doc, or "—" if unwritten. The next change to that feature
+  is when the doc gets written, from [`_TEMPLATE.md`](./_TEMPLATE.md), before merge.
 
-Một dòng "✅ / —" là **nợ kỹ thuật**, không phải trạng thái bình thường.
+A "✅ / —" row is **debt**, not a steady state.
 
 ---
 
-## Shell & điều hướng
+## Shell and navigation
 
-| Tính năng | Route | Code | Doc |
+| Feature | Route | Code | Doc |
 |---|---|---|---|
 | Main shell (bottom nav + FAB) | `/` `/settings` | ✅ | — |
-| Khóa viewport (không kéo rê, không zoom, `#root` là container cuộn) | toàn app | ✅ | — |
+| Viewport lock (no rubber-band, no zoom, `#root` is the scroll container) | app-wide | ✅ | — |
 | Onboarding | `/onboarding` | ✅ | — |
-| Bắt lỗi render (ErrorBoundary theo route + toàn app) | toàn app | ✅ | — |
+| Render crash recovery (per-route and app-wide `ErrorBoundary`) | app-wide | ✅ | — |
 
-## Tính năng chính
+## Product features
 
-| Tính năng | Route | Code | Doc |
+| Feature | Route | Code | Doc |
 |---|---|---|---|
-| <Tính năng của bạn> | `/...` | ❌ | — |
+| <Your feature> | `/...` | ❌ | — |
 
-## Hạ tầng
+## Infrastructure
 
-| Tính năng | Code | Doc |
+| Feature | Code | Doc |
 |---|---|---|
-| PWA: cài đặt & tự cập nhật | ✅ | — |
-| Độ bền dữ liệu (`storage.persist`, báo lỗi ghi) | ✅ | — |
-| Sao lưu / khôi phục JSON (validate toàn file trước khi áp) | ✅ | — |
-| Dark theme (system / sáng / tối, không chớp khi tải) | ✅ | — |
-| Đa ngôn ngữ (vi/en) + test toàn vẹn catalog | ✅ | — |
+| PWA: install and self-update | ✅ | — |
+| Data durability (`storage.persist`, surfaced write failures) | ✅ | — |
+| JSON backup / restore (whole file validated before it is applied) | ✅ | — |
+| Dark theme (system / light / dark, no flash on load) | ✅ | — |
+| Localisation (vi/en) with a catalog integrity test | ✅ | — |
 
-## Cố ý không làm
+## Deliberately not built
 
-| Tính năng | Lý do |
+| Feature | Reason |
 |---|---|
-| Đăng nhập / tài khoản | Local-first, không backend |
-| Đồng bộ nhiều thiết bị | Xem [ADR 001](../decisions/001-local-first-no-backend.md) |
+| Accounts / sign-in | Local-first, no backend |
+| Multi-device sync | See [ADR 001](../decisions/001-local-first-no-backend.md) |

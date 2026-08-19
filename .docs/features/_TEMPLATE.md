@@ -1,57 +1,57 @@
-# <Tên tính năng>
+# <Feature name>
 
-> Trạng thái: ✅ Hoàn thành | 🚧 Một phần | ❌ Chưa làm
-> Cập nhật lần cuối: YYYY-MM-DD — nhánh: `<branch>`
+> Status: ✅ Done | 🚧 Partial | ❌ Not built
+> Last updated: YYYY-MM-DD — branch: `<branch>`
 
-## Mục đích
+## Purpose
 
-Một đoạn ngắn: tính năng này giải quyết vấn đề gì cho người dùng. Không mô tả code.
+One short paragraph: what problem this solves for the user. Not what the code does.
 
-## Màn hình & route
+## Screens and routes
 
-| Route | File | Ghi chú |
+| Route | File | Notes |
 |---|---|---|
 | `/example` | `src/features/example/ExamplePage.tsx` | |
 
-Các state UI phải có: **loading · empty · content · error**. Ghi rõ mỗi state hiển thị gì.
+Required UI states: **loading · empty · content · error**. Say what each one shows.
 
-## Hành vi
+## Behaviour
 
-- Người dùng làm X → hệ thống làm Y.
-- Điều kiện biên, thông báo lỗi, xác nhận trước hành động phá hủy.
-- Thứ tự sắp xếp, quy tắc gộp nhóm, cái gì hiện trước.
+- The user does X → the system does Y.
+- Edge conditions, error messages, confirmation before anything destructive.
+- Sort order, grouping rules, what appears first.
 
-## Domain & dữ liệu
+## Domain and data
 
-| Thứ | Ở đâu |
+| Concern | Where |
 |---|---|
-| Luật / phân loại | `src/domain/<module>.ts` (+ `.test.ts`) |
-| Ràng buộc | `src/domain/constraints.ts` |
-| Đọc/ghi | `useAppStore` actions: `...` · Dexie: `src/db/repo.ts` |
+| Rules / classification | `src/domain/<module>.ts` (+ `.test.ts`) |
+| Invariants | `src/domain/constraints.ts` |
+| Read/write | `useAppStore` actions: `...` · Dexie: `src/db/repo.ts` |
 
-Mọi phép tính hoặc phân loại đều nằm trong `src/domain/` kèm test — không nằm trong
-component (luật 2 trong `../../CLAUDE.md`).
+Every calculation or classification lives in `src/domain/` with a test — never in a
+component (rule 2 in `../../CLAUDE.md`).
 
 ## i18n
 
-Prefix key: `example*`. Thêm key vào **mọi** file trong `i18n/`, không chỉ một.
-`src/lib/i18n.integrity.test.ts` sẽ báo lỗi nếu lệch.
+Key prefix: `example*`. Add each key to **every** file in `i18n/`, not just one.
+`src/lib/i18n.integrity.test.ts` fails on drift.
 
-## Quyết định
+## Decisions
 
-Ghi lại lựa chọn và đánh đổi mà đọc code không suy ra được:
+Record the choices and trade-offs that reading the code cannot reveal:
 
-- **<Quyết định>** — chọn A thay vì B vì ... . Hệ quả: ... .
-- **Cố ý không làm** — ... , vì ... .
+- **<Decision>** — chose A over B because ... . Consequence: ... .
+- **Deliberately not done** — ... , because ... .
 
-Nếu quyết định đủ lớn để ảnh hưởng ngoài tính năng này → viết ADR trong
-[`../decisions/`](../decisions/) và link tới đây.
+If a decision reaches beyond this feature, write an ADR in
+[`../decisions/`](../decisions/) and link it here.
 
-## Chưa làm / đã biết còn thiếu
+## Known gaps
 
 - [ ] ...
 
-## Tham chiếu
+## References
 
-- Spec luồng: [../app_flow/](../app_flow/)
-- Luật nghiệp vụ: [../domain_rules.md](../domain_rules.md)
+- Flow spec: [../app_flow/](../app_flow/)
+- Business rules: [../domain_rules.md](../domain_rules.md)

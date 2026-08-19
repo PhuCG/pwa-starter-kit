@@ -1,118 +1,125 @@
 # Design system
 
-Nguồn thi hành: [`src/styles/tokens.css`](../../src/styles/tokens.css). File này giải
-thích **vì sao** các token có giá trị như vậy và dùng chúng ở đâu — không chép lại
-danh sách giá trị (chép là sẽ lệch).
+Enforced by [`src/styles/tokens.css`](../../src/styles/tokens.css). This file explains
+**why** the tokens hold the values they do and where they are used — it does not repeat
+the list of values, because a copied list drifts.
 
-**Luật 3 trong `../../CLAUDE.md`: không có hex thô, không có px thô trong `src/`.**
-Đổi thương hiệu = sửa `tokens.css`. Nếu sửa ở đó mà giao diện không đổi theo, đó là
-bug của component, không phải lý do để hardcode.
+**Rule 3 in `../../CLAUDE.md`: no raw hex and no raw px anywhere in `src/`.** Rebranding
+means editing `tokens.css`. If editing it does not change the UI, that is a bug in the
+component, not a reason to hardcode.
 
 ---
 
-## Màu
+## Colour
 
-| Nhóm token | Dùng cho |
+| Token group | Used for |
 |---|---|
-| `--color-background` / `--color-surface` / `--color-surface-variant` | nền trang · nền thẻ · nền chìm (input, track) |
-| `--color-primary` / `--color-secondary` | hành động chính, trạng thái active, gradient |
-| `--color-text-main` / `-sub` / `-muted` | nội dung chính · mô tả phụ · nhãn và placeholder |
-| `--color-border` / `--color-border-strong` | viền thẻ · viền input đang focus |
-| `--color-success` / `-error` / `-warning` / `-info` | phản hồi trạng thái |
-| `--color-positive` / `--color-negative` | giá trị có chiều (tăng/giảm, vào/ra) |
-| `--chart-1..7` (+ `-light`) | chuỗi biểu đồ, lặp theo chỉ số |
+| `--color-background` / `--color-surface` / `--color-surface-variant` | page background · card background · recessed fills (inputs, tracks) |
+| `--color-primary` / `--color-secondary` | primary actions, active states, gradients |
+| `--color-text-main` / `-sub` / `-muted` | body copy · secondary description · labels and placeholders |
+| `--color-border` / `--color-border-strong` | card borders · focused input borders |
+| `--color-success` / `-error` / `-warning` / `-info` | status feedback |
+| `--color-positive` / `--color-negative` | directional values (up/down, in/out) |
+| `--color-on-accent` | text and icons sitting on a saturated fill |
+| `--color-inverse-surface` / `--color-on-inverse` | the toast and anything else that deliberately contrasts with the page |
+| `--color-scrim` | behind sheets and dialogs |
+| `--chart-1..7` (+ `-light`) | chart series, cycled by index |
 
-Ba lưu ý dễ sai:
+Three things that are easy to get wrong:
 
-- **`--color-primary` bị nhân bản ba chỗ** vì trình duyệt cần biết màu chrome trước
-  khi CSS tải: `APP.themeColor` trong `src/app.config.ts`, thẻ `<meta name="theme-color">`
-  trong `index.html`, và token này. `npm run init` sửa cả ba cùng lúc — đừng sửa tay
-  từng chỗ.
-- **Màu ngữ nghĩa theo chiều, không theo hình thức.** Dùng `--color-positive`, đừng
-  dùng `--color-success` cho một con số tăng: hai thứ này có thể tách nhau khi làm
-  dark theme.
-- **Chuỗi biểu đồ có bản `-light`** để tô nền vùng/nhãn mà không tự pha alpha.
+- **`--color-primary` is duplicated in three places** because the browser needs the
+  chrome colour before any CSS loads: `APP.themeColor` in `src/app.config.ts`, the
+  `<meta name="theme-color">` tag in `index.html`, and this token. `npm run init`
+  rewrites all three together — never edit them one at a time.
+- **Semantic colour is directional, not decorative.** Use `--color-positive` for a rising
+  figure, not `--color-success`: the two can diverge, and in the dark theme they do.
+- **Chart series have `-light` variants** so an area fill or a label background never
+  needs a hand-mixed alpha.
 
 ## Dark theme
 
-Bảng màu tối nằm dưới **một selector duy nhất**: `:root[data-theme="dark"]`.
+The dark palette sits behind **one selector**: `:root[data-theme="dark"]`.
 
-**CSS không bao giờ đọc `prefers-color-scheme` trực tiếp.** Nếu đọc, media query sẽ
-tiếp tục áp giao diện của hệ điều hành ngay cả sau khi người dùng đã chọn ngược lại,
-và hai nguồn sẽ mâu thuẫn âm thầm. Thay vào đó:
+**CSS never reads `prefers-color-scheme` directly.** If it did, the media query would
+keep applying the OS scheme after the user explicitly picked the other one, and the two
+sources would disagree silently. Instead:
 
-1. [`src/lib/theme.ts`](../../src/lib/theme.ts) quy đổi lựa chọn (`system` / `light` /
-   `dark`) thành thuộc tính `data-theme` trên `<html>`, và cập nhật luôn thẻ
-   `<meta name="theme-color">` — trên PWA đã cài, đó là màu thanh trạng thái.
-2. Một **script inline trong `index.html`** chạy trước lần vẽ đầu tiên để đặt thuộc
-   tính đó, nếu không người dùng chế độ tối sẽ thấy một nháy trắng mỗi lần mở app.
-   Script này giữ bản sao riêng của khóa localStorage — `npm run init` sửa cả hai chỗ.
+1. [`src/lib/theme.ts`](../../src/lib/theme.ts) resolves the preference (`system` /
+   `light` / `dark`) into that attribute, and updates the
+   `<meta name="theme-color">` tag with it — on an installed PWA that tag is the status
+   bar colour.
+2. An **inline script in `index.html`** runs before the first paint and sets the same
+   attribute; without it a dark-mode user gets a white flash on every cold start. That
+   script keeps its own copy of the storage key — `npm run init` rewrites both.
 
-Ba nhóm token **không** đổi theo giao diện, và đó là chủ ý:
+Three token groups deliberately do **not** change with the scheme:
 
-- `--color-on-accent` — chữ/icon nằm **trên** nền màu đậm (primary, gradient, danger).
-  Nền vẫn bão hòa ở chế độ tối nên độ tương phản đã đúng; lật màu sẽ làm mất chữ.
-- **Gradient** — giữ nguyên vì chúng là nhận diện thương hiệu.
-- **Spacing, radius, type scale** — hình học không có lý do gì để thay đổi theo màu.
+- `--color-on-accent` — text and icons **on** a saturated fill (primary, gradient,
+  danger). The fill stays saturated in dark mode, so the contrast is already correct and
+  flipping it would make the text unreadable.
+- **Gradients** — they carry the brand.
+- **Spacing, radius and the type scale** — geometry has no business changing with colour.
 
-Điều **có** đổi mà dễ quên: `--color-primary` sáng lên (`#818cf8`) vì màu indigo gốc
-không đủ tương phản trên nền gần đen; và đổ bóng gần như vô nghĩa trên nền tối, nên
-độ nổi ở đó đến từ việc `--color-surface` sáng hơn `--color-background`.
+What does change, and is easy to forget: `--color-primary` lightens to `#818cf8`, because
+the light indigo fails contrast on a near-black surface; and shadows carry almost no
+signal on a dark background, so elevation there comes from `--color-surface` being
+lighter than `--color-background`.
 
-## Khoảng cách
+## Spacing
 
-Thang `--sp-xxs` (2px) → `--sp-massive` (64px). Chỉ dùng bậc trong thang; một giá trị
-không nằm trong thang có nghĩa là bố cục đang bù cho một vấn đề khác.
+A scale from `--sp-xxs` (2px) to `--sp-massive` (64px). Only use steps on the scale — a
+value that is not on it usually means the layout is compensating for something else.
 
-Nhịp mặc định: padding thẻ `--sp-lg`, khoảng cách giữa các thẻ `--sp-md`, khoảng cách
-giữa các nhóm `--sp-xl`.
+The default rhythm: card padding `--sp-lg`, gap between cards `--sp-md`, gap between
+groups `--sp-xl`.
 
-## Bo góc
+## Radius
 
-`--radius-xs` (4px) → `--radius-xxl` (24px), `--radius-full` cho pill và avatar.
-Thẻ dùng `--radius-lg`, sheet dùng `--radius-xxl` ở hai góc trên.
+`--radius-xs` (4px) through `--radius-xxl` (24px), plus `--radius-full` for pills and
+avatars. Cards use `--radius-lg`; sheets use `--radius-xxl` on their top two corners.
 
-## Đổ bóng
+## Shadow
 
-`--shadow-card` · `--shadow-card-hover` · `--shadow-button` · `--shadow-floating`.
+`--shadow-card` · `--shadow-card-hover` · `--shadow-button` · `--shadow-floating` ·
+`--shadow-raised`.
 
-**Thẻ dùng viền HOẶC bóng, không dùng cả hai** (luật 6). Cả hai cùng lúc tạo ra hai
-đường phân cách cho một cạnh và làm giao diện trông nặng.
+**A card has a border OR a shadow, never both** (rule 6). Both at once draws two
+separators for one edge and makes the UI look heavy.
 
-## Chữ
+## Type
 
-Lớp tiện ích `.text-*` trong `tokens.css`, không viết `font-size` rời rạc:
+The `.text-*` utility classes in `tokens.css`, never a loose `font-size`:
 
-| Nhóm | Lớp | Dùng cho |
+| Group | Classes | Used for |
 |---|---|---|
-| Headline | `.text-headline-m` `.text-headline-s` | tiêu đề trang, con số chủ đạo |
-| Title | `.text-title-l` `.text-title-m` `.text-title-s` | tiêu đề mục, tiêu đề thẻ |
-| Body | `.text-body-l` `.text-body-m` `.text-body-s` | nội dung, mô tả |
-| Label | `.text-label-l` `.text-label-m` `.text-label-s` | nhãn form, nhãn tab, chú thích |
+| Headline | `.text-headline-m` `.text-headline-s` | page titles, hero figures |
+| Title | `.text-title-l` `.text-title-m` `.text-title-s` | section and card titles |
+| Body | `.text-body-l` `.text-body-m` `.text-body-s` | copy, descriptions |
+| Label | `.text-label-l` `.text-label-m` `.text-label-s` | form labels, tab labels, captions |
 
-Font: Plus Jakarta Sans, self-host trong `public/fonts/`, preload 2 weight trong
-`index.html`. Đổi font → xem [`public/README.md`](../../public/README.md).
+Typeface: Plus Jakarta Sans, self-hosted in `public/fonts/`, two weights preloaded in
+`index.html`. To change it, see [`public/README.md`](../../public/README.md).
 
-## Bố cục
+## Layout
 
-- `--page-max-width` (480px): `#root` và thanh nav dưới cùng bị chặn ở đây, nên trên
-  tablet ứng dụng vẫn là một cột điện thoại ở giữa thay vì giãn ra méo mó.
-- `--bottom-nav-height` + `--safe-bottom`: padding dưới của `.page` phải cộng cả hai,
-  nếu không nội dung cuối trang chui xuống dưới thanh nav.
-- `--viewport-height` / `--viewport-bottom-inset`: **đo** bởi
-  [`src/pwa/viewportInsets.ts`](../../src/pwa/viewportInsets.ts), không phải hằng số.
-  Dùng chúng thay cho `100dvh` khi cần biết phần màn hình đang thực sự nhìn thấy —
-  iOS không resize layout viewport khi bàn phím hiện lên.
+- `--page-max-width` (480px): both `#root` and the bottom nav are capped here, so on a
+  tablet the app stays a centred phone column instead of stretching out of proportion.
+- `--bottom-nav-height` + `--safe-bottom`: the bottom padding of `.page` must include
+  both, or the last item on a page hides under the nav bar.
+- `--viewport-height` / `--viewport-bottom-inset`: **measured** by
+  [`src/pwa/viewportInsets.ts`](../../src/pwa/viewportInsets.ts), not constants. Use them
+  instead of `100dvh` when you need the part of the screen actually visible — iOS does
+  not resize the layout viewport for the keyboard.
 
-## Chuyển động
+## Motion
 
-Ngắn (120–200ms) và chỉ dùng `transform` / `opacity`. `global.css` đã tôn trọng
-`prefers-reduced-motion` bằng cách rút thời lượng xuống gần 0 (không phải 0 — để các
-listener `transitionend` vẫn kích hoạt và không có gì bị treo chờ chúng).
+Short (120–200ms) and limited to `transform` and `opacity`. `global.css` already honours
+`prefers-reduced-motion` by cutting durations to near zero — near, not zero, so
+`transitionend` listeners still fire and nothing waiting on them can hang.
 
-## Icon
+## Icons
 
-Chỉ qua `<AppIcon name="..."/>`. Không emoji, không ký tự làm icon (luật 1).
-Thêm icon = thêm một dòng vào `ICON_REGISTRY` trong
-[`src/components/ui/icons.tsx`](../../src/components/ui/icons.tsx), đặt tên theo
-**ý nghĩa** (`pin`, `back`) chứ không theo **hình vẽ** (`thumbtack`, `chevronLeft`).
+Only through `<AppIcon name="..."/>`. No emoji, no text glyphs used as icons (rule 1).
+Adding one means adding a line to `ICON_REGISTRY` in
+[`src/components/ui/icons.tsx`](../../src/components/ui/icons.tsx), named for its
+**meaning** (`pin`, `back`) rather than its **picture** (`thumbtack`, `chevronLeft`).

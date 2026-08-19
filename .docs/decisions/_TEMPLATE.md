@@ -1,27 +1,27 @@
-# NNN. <Quyết định, viết ở thể khẳng định>
+# NNN. <The decision, stated as a fact>
 
-> Trạng thái: Proposed | Accepted | Superseded by NNN
-> Ngày: YYYY-MM-DD
+> Status: Proposed | Accepted | Superseded by NNN
+> Date: YYYY-MM-DD
 
-## Bối cảnh
+## Context
 
-Tình huống buộc phải chọn. Ràng buộc thật (thời gian, chi phí, kỹ năng, nền tảng).
-Viết ở thì hiện tại, không phán xét.
+The situation that forces a choice. The real constraints — time, cost, skills, platform.
+Written in the present tense, without judgement.
 
-## Quyết định
+## Decision
 
-Chúng ta sẽ ... .
+We will ... .
 
-## Phương án đã cân nhắc
+## Alternatives considered
 
-| Phương án | Vì sao không chọn |
+| Option | Why not |
 |---|---|
 | | |
 
-## Hệ quả
+## Consequences
 
-**Được:** ...
+**Gained:** ...
 
-**Mất:** ...
+**Given up:** ...
 
-**Trở nên khó hơn về sau:** ... — đây là phần quan trọng nhất, đừng bỏ trống.
+**Made harder later:** ... — this is the most important section. Do not leave it empty.
