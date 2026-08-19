@@ -1,0 +1,46 @@
+{
+  "nav.home": "Trang chủ",
+  "nav.settings": "Cài đặt",
+
+  "actionSave": "Lưu",
+  "actionCancel": "Hủy",
+  "actionDelete": "Xóa",
+
+  "startupErrorTitle": "Không mở được dữ liệu",
+  "startupErrorBody": "Trình duyệt từ chối truy cập bộ nhớ cục bộ. Thường là tạm thời — hay gặp khi duyệt ẩn danh hoặc máy hết dung lượng.",
+  "startupErrorRetry": "Thử lại",
+  "storageWriteFailedToast": "Chưa lưu được. Kiểm tra dung lượng rồi thử lại.",
+
+  "onboardingSubtitle": "Mọi thứ nằm trên máy bạn. Không tài khoản, không máy chủ.",
+  "onboardingNameLabel": "Gọi bạn là gì nhỉ?",
+  "onboardingNamePlaceholder": "Tên của bạn",
+  "onboardingStart": "Bắt đầu",
+
+  "homeGreeting": "Chào {name}",
+  "homeTitle": "Ghi chú của bạn",
+  "homeEmptyTitle": "Chưa có gì ở đây",
+  "homeEmptySubtitle": "Nhấn nút bên dưới để viết ghi chú đầu tiên.",
+
+  "noteAddTitle": "Ghi chú mới",
+  "noteEditTitle": "Sửa ghi chú",
+  "noteTitleLabel": "Tiêu đề",
+  "noteTitlePlaceholder": "Ghi chú về điều gì?",
+  "noteTitleRequired": "Cần nhập tiêu đề.",
+  "noteBodyLabel": "Nội dung",
+  "noteDateLabel": "Ngày",
+  "noteDeleteTitle": "Xóa ghi chú này?",
+  "noteDeleteBody": "Thao tác này không hoàn tác được.",
+
+  "settingsLanguage": "Ngôn ngữ",
+  "settingsStorageTitle": "Dữ liệu trên máy này",
+  "settingsStorageSafe": "Trình duyệt đã cam kết giữ dữ liệu của ứng dụng.",
+  "settingsStorageAtRisk": "Trình duyệt có thể xóa dữ liệu khi máy thiếu dung lượng. Cài ứng dụng ra màn hình chính sẽ giảm rủi ro này rất nhiều.",
+
+  "pwaUpdatingTitle": "Đang cập nhật",
+  "pwaUpdatingBody": "Vừa có bản mới. Chỉ mất một giây thôi.",
+  "pwaInstallTitle": "Cài ứng dụng",
+  "pwaInstallBodyIos": "Nhấn Chia sẻ, rồi chọn Thêm vào MH chính.",
+  "pwaInstallBodyAndroid": "Thêm vào màn hình chính để mở như một ứng dụng thật.",
+  "pwaInstallConfirm": "Cài đặt",
+  "pwaInstallLater": "Để sau"
+}

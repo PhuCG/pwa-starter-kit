@@ -1,0 +1,185 @@
+@import "./tokens.css";
+
+/* ── Fonts ── */
+@font-face {
+  font-family: "Plus Jakarta Sans";
+  src: url("/fonts/PlusJakartaSans-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Plus Jakarta Sans";
+  src: url("/fonts/PlusJakartaSans-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Plus Jakarta Sans";
+  src: url("/fonts/PlusJakartaSans-SemiBold.woff2") format("woff2");
+  font-weight: 600;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Plus Jakarta Sans";
+  src: url("/fonts/PlusJakartaSans-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Plus Jakarta Sans";
+  src: url("/fonts/PlusJakartaSans-ExtraBold.woff2") format("woff2");
+  font-weight: 800;
+  font-display: swap;
+}
+
+/* ── Reset ── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ── Viewport lock ────────────────────────────────────────────────────────────
+   Installed on a Home Screen the app has to behave like an app: the document
+   itself never moves. The viewport is pinned (fixed body, no document scroll)
+   so there is no rubber-band drag and no pull-to-refresh, and zoom is off.
+   `#root` is the single scroll container, with `auto` — a screen scrolls only
+   when its content is genuinely taller than the viewport, otherwise it sits
+   still. `src/pwa/viewportLock.ts` covers the part CSS cannot: iOS Safari
+   pinches anyway unless its gesture events are cancelled. */
+html,
+body {
+  height: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
+  /* Panning stays; pinch-zoom and double-tap zoom go. The used value is the
+     intersection down the ancestor chain, so declaring it here covers every
+     descendant — a child may still restrict further (vaul's drag handles do). */
+  touch-action: pan-x pan-y;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  position: fixed;
+  inset: 0;
+  font-family: var(--font-sans);
+  background: var(--color-background);
+  color: var(--color-text-main);
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+  /* Long-press select + its drag handles are the last thing that reads as a
+     web page rather than an app. Editable fields opt back in below. */
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* While a sheet is open, react-remove-scroll (inside vaul) forces
+   `position: relative !important` on the body — it assumes the document is the
+   scroller and needs to offset it. Ours never scrolls, so that only unpins the
+   shell for as long as the sheet is up. Pin it back — the extra `html` is there
+   to out-specify a rule that is itself `!important` and injected after ours. */
+html body[data-scroll-locked] {
+  position: fixed !important;
+}
+
+/* Measured by `src/pwa/viewportInsets.ts`. These are the fallbacks a browser
+   without `visualViewport` keeps forever, and what every browser reads while no
+   keyboard is up: the visible area is the whole viewport, hiding nothing. */
+:root {
+  --viewport-height: 100dvh;
+  --viewport-bottom-inset: 0px;
+}
+
+#root {
+  height: 100%;
+  max-width: var(--page-max-width);
+  margin: 0 auto;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: none;
+  -webkit-overflow-scrolling: touch;
+  /* The shell is pinned, so anything the keyboard covers would be unreachable
+     — including the action button at the bottom of a form. Padding of exactly
+     the covered height buys back that much scroll, and only while it is up. */
+  padding-bottom: var(--viewport-bottom-inset);
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  touch-action: manipulation;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+/* iOS: inputs ≥16px prevent focus zoom */
+input,
+textarea,
+select {
+  font-size: 16px;
+}
+
+/* Typing and correcting need selection back — the lock above is about the
+   page chrome, not about the text the user is entering. */
+input,
+textarea,
+select,
+[contenteditable] {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+/* Hide scrollbars on horizontal snap containers but keep scrollability.
+   `contain` stops a swipe past the last slide from chaining out to the shell
+   (or, in a browser tab, to the back-gesture). */
+.no-scrollbar {
+  scrollbar-width: none;
+  overscroll-behavior: contain;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Accessibility: honour the OS "reduce motion" setting. Near-zero rather than
+   0s so transitionend/animationend listeners still fire and nothing that waits
+   on them can hang. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

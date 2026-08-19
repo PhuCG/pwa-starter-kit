@@ -1,0 +1,54 @@
+/* Update overlay — covers everything, including sheets and toasts (z 70), so
+   nothing can be clicked while the page is a second away from reloading. */
+.sw-update {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-sm);
+  padding: var(--sp-xxl);
+  text-align: center;
+  background: var(--color-background);
+  color: var(--color-text-main);
+}
+
+.sw-update__body {
+  color: var(--color-text-sub);
+  margin-bottom: var(--sp-lg);
+}
+
+/* Indeterminate bar, not a spinner: same reason the route fallback uses a
+   skeleton — a spinner reads as "something is wrong", a moving bar reads as
+   "it is coming". Matches ProgressBar's 6px pill. */
+.sw-update__track {
+  width: 140px;
+  height: 6px;
+  border-radius: var(--radius-full);
+  background: var(--color-surface-variant);
+  overflow: hidden;
+}
+.sw-update__bar {
+  width: 40%;
+  height: 100%;
+  border-radius: var(--radius-full);
+  background: var(--gradient-primary);
+  animation: sw-update-slide 1200ms ease-in-out infinite;
+}
+@keyframes sw-update-slide {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(250%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sw-update__bar {
+    animation: none;
+    width: 100%;
+  }
+}

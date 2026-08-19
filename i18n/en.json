@@ -1,0 +1,46 @@
+{
+  "nav.home": "Home",
+  "nav.settings": "Settings",
+
+  "actionSave": "Save",
+  "actionCancel": "Cancel",
+  "actionDelete": "Delete",
+
+  "startupErrorTitle": "Cannot open your data",
+  "startupErrorBody": "The browser refused access to local storage. This is usually temporary — private browsing and a full disk are the common causes.",
+  "startupErrorRetry": "Try again",
+  "storageWriteFailedToast": "Not saved. Check your storage and try again.",
+
+  "onboardingSubtitle": "Everything stays on this device. No account, no server.",
+  "onboardingNameLabel": "What should we call you?",
+  "onboardingNamePlaceholder": "Your name",
+  "onboardingStart": "Get started",
+
+  "homeGreeting": "Hi {name}",
+  "homeTitle": "Your notes",
+  "homeEmptyTitle": "Nothing here yet",
+  "homeEmptySubtitle": "Tap the button below to write your first note.",
+
+  "noteAddTitle": "New note",
+  "noteEditTitle": "Edit note",
+  "noteTitleLabel": "Title",
+  "noteTitlePlaceholder": "What is this about?",
+  "noteTitleRequired": "A title is required.",
+  "noteBodyLabel": "Details",
+  "noteDateLabel": "Date",
+  "noteDeleteTitle": "Delete this note?",
+  "noteDeleteBody": "This cannot be undone.",
+
+  "settingsLanguage": "Language",
+  "settingsStorageTitle": "Data on this device",
+  "settingsStorageSafe": "Your browser has promised to keep this app's data.",
+  "settingsStorageAtRisk": "The browser may clear this app's data when space runs low. Installing the app to your home screen makes it much less likely.",
+
+  "pwaUpdatingTitle": "Updating",
+  "pwaUpdatingBody": "A new version just arrived. This takes a second.",
+  "pwaInstallTitle": "Install the app",
+  "pwaInstallBodyIos": "Tap Share, then Add to Home Screen.",
+  "pwaInstallBodyAndroid": "Add it to your home screen to open it like any other app.",
+  "pwaInstallConfirm": "Install",
+  "pwaInstallLater": "Not now"
+}

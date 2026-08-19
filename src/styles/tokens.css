@@ -1,0 +1,159 @@
+/* Design tokens — the ONLY place a colour, spacing step, radius, shadow or
+   type scale is defined. Nothing in src/ may use a raw hex or px value; see
+   rule 3 in CLAUDE.md and .docs/theme/design-system.md.
+
+   Rebranding = editing this file. If a change here does not propagate, that is
+   a bug in the component, not a reason to hardcode.
+
+   Keep --color-primary in sync with APP.themeColor in src/app.config.ts and
+   the <meta name="theme-color"> in index.html — three copies the browser needs
+   before any CSS has loaded. `npm run init` rewrites all three together. */
+:root {
+  /* ── Base palette ── */
+  --color-background: #f8fafc;
+  --color-surface: #ffffff;
+  --color-surface-variant: #f1f5f9;
+  --color-primary: #4f46e5;
+  --color-secondary: #7c3aed;
+
+  --color-text-main: #0f172a;
+  --color-text-sub: #475569;
+  --color-text-muted: #94a3b8;
+
+  --color-border: #e2e8f0;
+  --color-border-strong: #cbd5e1;
+
+  /* ── Status ── */
+  --color-success: #10b981;
+  --color-error: #ef4444;
+  --color-warning: #f59e0b;
+  --color-info: #3b82f6;
+
+  /* ── Directional semantic (up/down, gain/loss, in/out) ── */
+  --color-positive: #059669;
+  --color-positive-light: #d1fae5;
+  --color-negative: #dc2626;
+  --color-negative-light: #ffe4e6;
+  --color-neutral: #64748b;
+
+  /* ── Chart series (cycle by index) ── */
+  --chart-1: #7c3aed;
+  --chart-2: #f97316;
+  --chart-3: #14b8a6;
+  --chart-4: #f59e0b;
+  --chart-5: #4f46e5;
+  --chart-6: #94a3b8;
+  --chart-7: #10b981;
+  --chart-1-light: #f3e8ff;
+  --chart-2-light: #ffedd5;
+  --chart-3-light: #ccfbf1;
+  --chart-4-light: #fef3c7;
+  --chart-5-light: #e0e7ff;
+  --chart-6-light: #f1f5f9;
+  --chart-7-light: #d1fae5;
+
+  /* ── Gradients ── */
+  --gradient-primary: linear-gradient(135deg, #4f46e5, #7c3aed);
+  --gradient-background: linear-gradient(135deg, #e0e7ff, #ede9fe);
+  --gradient-dark-cta: linear-gradient(135deg, #312e81, #1e1b4b);
+  --gradient-positive: linear-gradient(135deg, #059669, #10b981);
+  --gradient-negative: linear-gradient(135deg, #dc2626, #f87171);
+
+  /* ── Shadows ── */
+  --shadow-card: 0 4px 16px 0 rgb(15 23 42 / 0.06);
+  --shadow-card-hover: 0 8px 24px -4px rgb(79 70 229 / 0.15);
+  --shadow-button: 0 4px 12px 0 rgb(79 70 229 / 0.28);
+  --shadow-floating: 0 8px 24px -4px rgb(15 23 42 / 0.1), 0 2px 8px 0 rgb(15 23 42 / 0.05);
+
+  /* ── Spacing scale ── */
+  --sp-xxs: 2px;
+  --sp-xs: 4px;
+  --sp-sm: 8px;
+  --sp-md: 12px;
+  --sp-lg: 16px;
+  --sp-xl: 20px;
+  --sp-xxl: 24px;
+  --sp-xxxl: 32px;
+  --sp-huge: 40px;
+  --sp-massive: 64px;
+
+  /* ── Radii ── */
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-xxl: 24px;
+  --radius-full: 9999px;
+
+  /* ── Safe areas ── */
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+
+  /* ── Layout ── */
+  --page-max-width: 480px;
+  --bottom-nav-height: 64px;
+
+  /* ── Font ── */
+  --font-sans: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+/* ── Typography utility classes (mobile textTheme tokens) ── */
+.text-headline-m {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.56px;
+  line-height: 1.2;
+}
+.text-headline-s {
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.48px;
+  line-height: 1.25;
+}
+.text-title-l {
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.2px;
+  line-height: 1.3;
+}
+.text-title-m {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+.text-title-s {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+.text-body-l {
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+}
+.text-body-m {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.5;
+}
+.text-body-s {
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.6;
+}
+.text-label-l {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.3;
+}
+.text-label-m {
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.3;
+}
+.text-label-s {
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.3;
+}

@@ -1,0 +1,25 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      # Same three gates as `npm run check`, but as separate steps so a failure
+      # names itself in the job summary instead of hiding inside one red script.
+      - run: npx biome check src scripts
+      - run: npx tsc -b
+      - run: npm run test
+      # Build last: a type error should fail before bundling, and this catches
+      # the things only the real build sees (PWA manifest, chunking, asset refs).
+      - run: npx vite build

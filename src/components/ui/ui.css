@@ -1,0 +1,465 @@
+/* ── Shared UI kit styles ── */
+
+/* Card: border OR shadow, never both */
+.ui-card {
+  background: var(--color-surface);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  padding: var(--sp-lg);
+}
+.ui-card--elevated {
+  border: none;
+  box-shadow: var(--shadow-card);
+}
+.ui-card--tappable {
+  width: 100%;
+  text-align: left;
+  transition: box-shadow 150ms ease-out, transform 120ms ease-out;
+}
+.ui-card--tappable:active {
+  transform: scale(0.99);
+}
+
+.ui-gradient-card {
+  background: var(--gradient-primary);
+  border-radius: var(--radius-xxl);
+  padding: var(--sp-xxl);
+  color: #fff;
+}
+
+/* Buttons */
+.ui-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-sm);
+  width: 100%;
+  min-height: 48px;
+  padding: 0 var(--sp-xl);
+  border-radius: var(--radius-lg);
+  font-size: 14px;
+  font-weight: 600;
+  transition: opacity 120ms ease-out, transform 120ms ease-out;
+}
+.ui-btn:active {
+  transform: scale(0.98);
+}
+.ui-btn:disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+.ui-btn--primary {
+  background: var(--color-primary);
+  color: #fff;
+}
+.ui-btn--gradient {
+  background: var(--gradient-primary);
+  color: #fff;
+  box-shadow: var(--shadow-button);
+}
+.ui-btn--outlined {
+  background: var(--color-surface);
+  color: var(--color-text-main);
+  border: 1px solid var(--color-border-strong);
+}
+.ui-btn--danger {
+  background: var(--color-negative);
+  color: #fff;
+}
+.ui-btn--ghost {
+  background: transparent;
+  color: var(--color-primary);
+  width: auto;
+  min-height: 44px;
+}
+
+/* Progress bar: 6px pill, one standard */
+.ui-progress {
+  height: 6px;
+  width: 100%;
+  border-radius: var(--radius-full);
+  background: var(--color-border);
+  overflow: hidden;
+}
+.ui-progress--sm {
+  height: 4px;
+}
+.ui-progress > div {
+  height: 100%;
+  border-radius: var(--radius-full);
+  transition: width 600ms ease-out;
+}
+
+/* Sheet (vaul) */
+.ui-sheet-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgb(15 23 42 / 0.45);
+  z-index: 40;
+}
+.ui-sheet-content {
+  position: fixed;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  margin: 0 auto;
+  max-width: var(--page-max-width);
+  background: var(--color-surface);
+  border-radius: var(--radius-xxl) var(--radius-xxl) 0 0;
+  box-shadow: var(--shadow-floating);
+  display: flex;
+  flex-direction: column;
+  /* Sit on the keyboard rather than under it: `bottom` lifts the sheet to the
+     bottom edge of what is visible, and the height is measured against the
+     visible area rather than `100dvh` — which keeps counting the covered part
+     and would push the header off the top. The body absorbs the loss and
+     scrolls; the footer stays put. Both are inert with no keyboard up. */
+  bottom: var(--viewport-bottom-inset);
+  max-height: calc(var(--viewport-height) - 48px);
+  outline: none;
+}
+/* Two class names on purpose: vaul injects its own `[data-vaul-handle]` look
+   (32x5, grey, 70% opacity) into <head> at runtime, which ties with a single
+   class on specificity and wins on source order. */
+.ui-sheet-content .ui-sheet-handle {
+  width: 40px;
+  height: 4px;
+  border-radius: var(--radius-full);
+  background: var(--color-border-strong);
+  opacity: 1;
+  margin: var(--sp-md) auto var(--sp-xs);
+  flex-shrink: 0;
+}
+/* vaul sets `touch-action: none` on its content so it can drag the sheet from
+   anywhere. We drag from the handle only (`handleOnly`), so that flag would do
+   nothing here except stop a finger from scrolling the form. Pan is given back;
+   pinch stays out, exactly like the rest of the app. */
+.ui-sheet-content[data-vaul-drawer] {
+  touch-action: pan-x pan-y;
+}
+
+.ui-sheet-body {
+  flex: 1;
+  /* Without this a flex child refuses to shrink below its content, so the body
+     would grow past the sheet instead of scrolling and push the footer off. */
+  min-height: 0;
+  overflow-y: auto;
+  /* `overflow-y: auto` alone computes overflow-x to `auto` as well, so one
+     field wider than the sheet turns the whole form into a horizontal scroller
+     the user can drag sideways. Nothing here is meant to scroll sideways. */
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  padding: var(--sp-lg) var(--sp-lg) calc(var(--sp-xxl) + var(--safe-bottom));
+}
+/* With a footer, the safe area belongs to the footer instead. */
+.ui-sheet-body--with-footer {
+  padding-bottom: var(--sp-lg);
+}
+
+.ui-sheet-footer {
+  flex-shrink: 0;
+  /* The home-indicator inset is only worth reserving while it is visible; with
+     a keyboard over it the same padding is just a band of dead surface between
+     the button and the keys. */
+  padding: var(--sp-lg) var(--sp-lg)
+    calc(var(--sp-lg) + max(0px, var(--safe-bottom) - var(--viewport-bottom-inset)));
+  border-top: 1px solid var(--color-border);
+  background: var(--color-surface);
+}
+
+/* Dialog */
+.ui-dialog-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgb(15 23 42 / 0.45);
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--sp-xxl);
+}
+.ui-dialog {
+  background: var(--color-surface);
+  border-radius: var(--radius-md);
+  padding: var(--sp-xxl);
+  width: 100%;
+  max-width: 360px;
+  box-shadow: var(--shadow-floating);
+}
+
+/* Inputs */
+.ui-input {
+  width: 100%;
+  min-height: 48px;
+  padding: var(--sp-md) var(--sp-lg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  font-size: 16px;
+  color: var(--color-text-main);
+  outline: none;
+  transition: border-color 120ms ease-out;
+}
+.ui-input:focus {
+  border-color: var(--color-primary);
+}
+.ui-input::placeholder {
+  color: var(--color-text-muted);
+}
+
+/* Date field: our own text on top, the native control invisible over it.
+   See the `DateField` comment in index.tsx for why the OS rendering is hidden
+   rather than styled. */
+.ui-datefield {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-md);
+}
+.ui-datefield:focus-within {
+  border-color: var(--color-primary);
+}
+.ui-datefield__text {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+/* Out of flow, so the width the OS wants for a date input cannot widen the row.
+   Transparent rather than hidden: `display: none` or `visibility: hidden` would
+   stop the tap from reaching the picker. */
+.ui-datefield__native {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  opacity: 0;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* Chips */
+.ui-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-xs);
+  min-height: 32px;
+  padding: 0 var(--sp-md);
+  border-radius: var(--radius-full);
+  background: var(--color-surface-variant);
+  color: var(--color-text-sub);
+  font-size: 12px;
+  font-weight: 500;
+  border: 1px solid transparent;
+}
+.ui-chip--active {
+  background: var(--color-primary);
+  color: #fff;
+}
+.ui-chip--outlined {
+  background: var(--color-surface);
+  border-color: var(--color-border);
+}
+
+/* Route skeleton — every route is lazy, so without a fallback each navigation
+   painted a blank page for a frame. Shapes only, no spinner: a spinner reads
+   as "something is wrong", a skeleton reads as "it is coming". */
+.ui-skeleton {
+  padding: calc(var(--safe-top) + var(--sp-lg)) var(--sp-lg) 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-lg);
+}
+.ui-skeleton__bar {
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-variant);
+  animation: skeleton-pulse 1400ms ease-in-out infinite;
+}
+@keyframes skeleton-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.55;
+  }
+}
+
+/* Small inline tag — e.g. "optional" next to a field label. A bare muted
+   span here reads as an extension of the label text with no boundary; the
+   pill gives it a visible edge so it doesn't blend in. */
+.ui-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px var(--sp-sm);
+  border-radius: var(--radius-full);
+  background: var(--color-surface-variant);
+  color: var(--color-text-muted);
+  vertical-align: middle;
+}
+
+/* Segmented toggle */
+.ui-segmented {
+  display: flex;
+  background: var(--color-surface-variant);
+  border-radius: var(--radius-md);
+  padding: var(--sp-xxs);
+  gap: var(--sp-xxs);
+}
+.ui-segmented > button {
+  flex: 1;
+  min-height: 40px;
+  border-radius: calc(var(--radius-md) - 2px);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-sub);
+  transition: background 150ms ease-out, color 150ms ease-out;
+}
+.ui-segmented > button[data-active="true"] {
+  background: var(--color-surface);
+  color: var(--color-text-main);
+  box-shadow: 0 1px 3px rgb(15 23 42 / 0.08);
+}
+
+/* Month navigator */
+.ui-month-nav {
+  display: flex;
+  align-items: center;
+  margin-bottom: var(--sp-md);
+}
+.ui-month-nav__label {
+  flex: 1;
+  text-align: center;
+}
+.ui-month-nav__btn {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-variant);
+  color: var(--color-text-sub);
+}
+.ui-month-nav__btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+/* Empty state */
+.ui-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: var(--sp-huge) var(--sp-xxl);
+  gap: var(--sp-md);
+}
+.ui-empty__icon {
+  width: 64px;
+  height: 64px;
+  border-radius: var(--radius-full);
+  background: var(--color-surface-variant);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-muted);
+}
+
+/* Icon containers */
+.ui-icon-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.ui-icon-box--square {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-md);
+}
+.ui-icon-box--circle {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-full);
+}
+
+/* Toast */
+.ui-toast-wrap {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: calc(var(--bottom-nav-height) + var(--safe-bottom) + var(--sp-lg));
+  display: flex;
+  justify-content: center;
+  z-index: 70;
+  pointer-events: none;
+  padding: 0 var(--sp-lg);
+}
+.ui-toast {
+  background: var(--color-text-main);
+  color: #fff;
+  padding: var(--sp-md) var(--sp-xl);
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 500;
+  box-shadow: var(--shadow-floating);
+  animation: toast-in 250ms ease-out;
+  max-width: 100%;
+}
+.ui-toast--success {
+  background: var(--color-positive);
+}
+.ui-toast--error {
+  background: var(--color-negative);
+}
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Gradient text */
+.ui-gradient-text {
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Page scaffolding */
+.page {
+  min-height: 100dvh;
+  padding: calc(var(--safe-top) + var(--sp-lg)) var(--sp-lg)
+    calc(var(--bottom-nav-height) + var(--safe-bottom) + var(--sp-xxl));
+}
+.page--stack {
+  /* stack routes have no bottom nav */
+  padding-bottom: calc(var(--safe-bottom) + var(--sp-xxl));
+}
+.page-header {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-md);
+  margin-bottom: var(--sp-xl);
+}
+.page-header__back {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-full);
+  color: var(--color-text-main);
+  margin-left: calc(-1 * var(--sp-md));
+}

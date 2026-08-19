@@ -1,0 +1,51 @@
+/* Bottom navigation. Fixed, above the safe-area inset, and capped at the same
+   --page-max-width as #root so it lines up with the content on a tablet. */
+.shell-nav {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 30;
+  background: var(--color-surface);
+  border-top: 1px solid var(--color-border);
+  padding-bottom: var(--safe-bottom);
+}
+
+.shell-nav__inner {
+  max-width: var(--page-max-width);
+  margin: 0 auto;
+  height: var(--bottom-nav-height);
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+/* Tabs share the row equally; the FAB keeps its own width so adding or
+   removing a tab never resizes it. */
+.shell-tab {
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  height: 100%;
+  min-width: 44px;
+}
+
+.shell-fab {
+  width: 52px;
+  height: 52px;
+  border-radius: var(--radius-full);
+  background: var(--gradient-primary);
+  box-shadow: var(--shadow-button);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 var(--sp-md);
+  transform: translateY(-10px);
+  transition: transform 120ms ease-out;
+}
+.shell-fab:active {
+  transform: translateY(-10px) scale(0.94);
+}
