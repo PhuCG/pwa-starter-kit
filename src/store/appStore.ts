@@ -1,13 +1,27 @@
+import { type SaveOutcome, saveBackupFile } from '@/db/backupIo'
 import { loadScalars, saveLocale, saveProfile } from '@/db/localScalars'
 import { type PersistenceState, requestPersistentStorage } from '@/db/persistence'
 import * as repo from '@/db/repo'
 import type { WriteFailure } from '@/db/repo'
+import {
+  type BackupPayload,
+  type ParseResult,
+  backupFileName,
+  parseBackup,
+  serializeBackup,
+} from '@/domain/backup'
 import { assertNote } from '@/domain/constraints'
 import { dateToDayKey } from '@/domain/dates'
 import type { Note, Profile } from '@/domain/types'
-import { type AppLocale, detectLocale } from '@/lib/i18n'
+import { type AppLocale, detectLocale, isSupportedLocale } from '@/lib/i18n'
 import i18next from '@/lib/i18n'
 import { noteId } from '@/lib/id'
+import {
+  type ThemePreference,
+  applyTheme,
+  loadThemePreference,
+  saveThemePreference,
+} from '@/lib/theme'
 import { create } from 'zustand'
 
 /**
@@ -39,14 +53,26 @@ export interface AppState {
   persistence: PersistenceState
 
   locale: AppLocale
+  theme: ThemePreference
   profile: Profile
   notes: Note[]
 
   hydrate: () => Promise<void>
   dismissWriteError: () => void
   setLocale: (locale: AppLocale) => void
+  setTheme: (theme: ThemePreference) => void
   setProfile: (patch: Partial<Profile>) => void
   completeOnboarding: (userName: string) => void
+
+  /** Serialize everything and hand the file to the OS. Never throws. */
+  exportBackup: () => Promise<SaveOutcome>
+  /**
+   * Validate a backup file and, only if the whole of it is valid, replace
+   * every record and preference with its contents.
+   */
+  restoreBackup: (raw: string) => Promise<ParseResult>
+  /** What an export would contain right now, for the confirmation copy. */
+  backupPayload: () => BackupPayload
 
   addNote: (input: { title: string; body: string; date?: string }) => void
   updateNote: (id: string, patch: Partial<Omit<Note, 'id'>>) => void
@@ -61,6 +87,7 @@ export const useAppStore = create<AppState>((set, get) => ({
   persistence: { supported: false, persisted: false },
 
   locale: 'vi',
+  theme: 'system',
   profile: { userName: '', hasCompletedOnboarding: false },
   notes: [],
 
@@ -83,9 +110,16 @@ export const useAppStore = create<AppState>((set, get) => ({
         await i18next.changeLanguage(locale)
       }
 
+      // The inline script in index.html already put the right attribute on
+      // <html>; this only brings the preference into React state and repaints
+      // the browser chrome, which that script cannot do.
+      const theme = loadThemePreference()
+      applyTheme(theme)
+
       const { notes } = await repo.loadAll()
       set({
         locale,
+        theme,
         profile: scalars.profile,
         notes: sortNotes(notes),
         hydrateStatus: 'ready',
@@ -109,6 +143,12 @@ export const useAppStore = create<AppState>((set, get) => ({
     saveLocale(locale)
     void i18next.changeLanguage(locale)
     set({ locale })
+  },
+
+  setTheme(theme) {
+    saveThemePreference(theme)
+    applyTheme(theme)
+    set({ theme })
   },
 
   setProfile(patch) {
@@ -153,6 +193,38 @@ export const useAppStore = create<AppState>((set, get) => ({
   removeNote(id) {
     repo.deleteNote(id)
     set({ notes: get().notes.filter((n) => n.id !== id) })
+  },
+
+  backupPayload() {
+    const { notes, profile, locale } = get()
+    return { notes, profile, locale }
+  },
+
+  async exportBackup() {
+    const exportedAt = new Date().toISOString()
+    const json = serializeBackup({ exportedAt, data: get().backupPayload() })
+    // Not awaited before reaching `saveBackupFile`: `navigator.share` only
+    // works inside the user gesture that started it.
+    return saveBackupFile(backupFileName(exportedAt), json)
+  },
+
+  async restoreBackup(raw) {
+    const result = parseBackup(raw)
+    if (!result.ok) return result
+
+    const { notes, profile, locale } = result.backup.data
+
+    // Awaited and allowed to throw, unlike every other write in this store: a
+    // half-applied restore leaves the user with a mixture of two datasets and
+    // no way to reason about it. The in-memory state is only swapped once disk
+    // has actually accepted the new rows.
+    await repo.replaceAll({ notes })
+
+    saveProfile(profile)
+    if (isSupportedLocale(locale) && locale !== get().locale) get().setLocale(locale)
+    set({ profile, notes: sortNotes(notes) })
+
+    return result
   },
 }))
 

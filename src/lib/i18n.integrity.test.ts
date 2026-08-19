@@ -17,7 +17,7 @@ const I18N_DIR = join(process.cwd(), 'i18n')
 const SRC_DIR = join(process.cwd(), 'src')
 
 /** Keys that only ever appear via a computed lookup, e.g. `t(\`nav.${id}\`)`. */
-const DYNAMIC_KEYS: RegExp[] = [/^nav\./]
+const DYNAMIC_KEYS: RegExp[] = [/^nav\./, /^theme\./]
 
 const EMOJI = /\p{Extended_Pictographic}/u
 
@@ -41,10 +41,19 @@ function sourceFiles(dir: string): string[] {
   })
 }
 
+/**
+ * Strip comments before scanning. A `t('...')` written inside a docstring — to
+ * explain this very scanner, as it happens — is not a key, and counting it
+ * fails the build over prose.
+ */
+function stripComments(text: string): string {
+  return text.replace(/\/\*[\s\S]*?\*\//g, '').replace(/^[ \t]*\/\/.*$/gm, '')
+}
+
 function usedKeys(): Set<string> {
   const keys = new Set<string>()
   for (const file of sourceFiles(SRC_DIR)) {
-    const text = readFileSync(file, 'utf8')
+    const text = stripComments(readFileSync(file, 'utf8'))
     for (const m of text.matchAll(/\bt\(\s*'([^']+)'/g)) keys.add(m[1] as string)
     for (const m of text.matchAll(/labelKey:\s*'([^']+)'/g)) keys.add(m[1] as string)
   }

@@ -33,6 +33,32 @@ Ba lưu ý dễ sai:
   dark theme.
 - **Chuỗi biểu đồ có bản `-light`** để tô nền vùng/nhãn mà không tự pha alpha.
 
+## Dark theme
+
+Bảng màu tối nằm dưới **một selector duy nhất**: `:root[data-theme="dark"]`.
+
+**CSS không bao giờ đọc `prefers-color-scheme` trực tiếp.** Nếu đọc, media query sẽ
+tiếp tục áp giao diện của hệ điều hành ngay cả sau khi người dùng đã chọn ngược lại,
+và hai nguồn sẽ mâu thuẫn âm thầm. Thay vào đó:
+
+1. [`src/lib/theme.ts`](../../src/lib/theme.ts) quy đổi lựa chọn (`system` / `light` /
+   `dark`) thành thuộc tính `data-theme` trên `<html>`, và cập nhật luôn thẻ
+   `<meta name="theme-color">` — trên PWA đã cài, đó là màu thanh trạng thái.
+2. Một **script inline trong `index.html`** chạy trước lần vẽ đầu tiên để đặt thuộc
+   tính đó, nếu không người dùng chế độ tối sẽ thấy một nháy trắng mỗi lần mở app.
+   Script này giữ bản sao riêng của khóa localStorage — `npm run init` sửa cả hai chỗ.
+
+Ba nhóm token **không** đổi theo giao diện, và đó là chủ ý:
+
+- `--color-on-accent` — chữ/icon nằm **trên** nền màu đậm (primary, gradient, danger).
+  Nền vẫn bão hòa ở chế độ tối nên độ tương phản đã đúng; lật màu sẽ làm mất chữ.
+- **Gradient** — giữ nguyên vì chúng là nhận diện thương hiệu.
+- **Spacing, radius, type scale** — hình học không có lý do gì để thay đổi theo màu.
+
+Điều **có** đổi mà dễ quên: `--color-primary` sáng lên (`#818cf8`) vì màu indigo gốc
+không đủ tương phản trên nền gần đen; và đổ bóng gần như vô nghĩa trên nền tối, nên
+độ nổi ở đó đến từ việc `--color-surface` sáng hơn `--color-background`.
+
 ## Khoảng cách
 
 Thang `--sp-xxs` (2px) → `--sp-massive` (64px). Chỉ dùng bậc trong thang; một giá trị

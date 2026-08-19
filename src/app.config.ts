@@ -17,6 +17,13 @@ export const APP = {
   /** Splash background; must match `--color-background` in tokens.css. */
   backgroundColor: '#f8fafc',
   /**
+   * Status-bar colour while the dark theme is active; must match
+   * `--color-background` under `[data-theme="dark"]` in tokens.css. Not used by
+   * the manifest — the manifest has one background colour — only by
+   * `src/lib/theme.ts` when it rewrites the `theme-color` meta.
+   */
+  backgroundColorDark: '#0b1120',
+  /**
    * Namespaces every localStorage key. The `_v1` is deliberate: a breaking
    * change to the shape of a stored value bumps the prefix instead of writing a
    * migration for data that is, by definition, cheap to lose.

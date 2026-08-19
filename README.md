@@ -31,7 +31,9 @@ các chỗ `<placeholder>` trong `CLAUDE.md` + `.docs/`.
 |---|---|
 | **Build** | Vite 6, TypeScript strict (`noUncheckedIndexedAccess`), Biome (lint + format), Vitest + jsdom + fake-indexeddb, `npm run check` gộp cả ba |
 | **PWA** | vite-plugin-pwa, service worker tự cập nhật + giải thích lần reload, thẻ mời cài đặt (Android/iOS), khóa viewport, đo inset bàn phím iOS |
-| **Dữ liệu** | Dexie (`src/db/db.ts`), repo là nơi duy nhất chạm Dexie, ghi lỗi được báo chứ không nuốt, `navigator.storage.persist()` |
+| **Dữ liệu** | Dexie (`src/db/db.ts`), repo là nơi duy nhất chạm Dexie, ghi lỗi được báo chứ không nuốt, `navigator.storage.persist()`, sao lưu/khôi phục JSON có validate toàn file |
+| **Giao diện** | Dark theme (system / sáng / tối) qua `data-theme`, script inline chống nháy trắng, `theme-color` đổi theo |
+| **Chịu lỗi** | `ErrorBoundary` theo route (đổi route là tự khôi phục) + một lớp bọc router |
 | **State** | zustand, hydrate là state machine (`idle/loading/ready/error`) có retry, selector memo hóa |
 | **Domain** | TS thuần, `constraints.ts` gom mọi invariant, `dates.ts` xử lý key `yyyy-MM-dd` |
 | **UI kit** | Card, Button, Sheet (vaul), Dialog, EmptyState, ProgressBar, DateField, MonthNavigator, SegmentedToggle, Toast, Skeleton, HalfDonutGauge — tất cả ăn design token |

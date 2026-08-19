@@ -1,4 +1,5 @@
 import { APP } from '@/app.config'
+import { ErrorBoundary } from '@/components/ErrorBoundary'
 import { AppIcon, Button, ToastProvider } from '@/components/ui'
 import { ServiceWorkerUpdater } from '@/pwa/ServiceWorkerUpdater'
 import { router } from '@/routes'
@@ -43,9 +44,13 @@ export default function App() {
     )
   }
 
+  // The outer boundary catches what the per-route one in `routes.tsx` cannot:
+  // a crash in the router itself, or in the shell that wraps every tab.
   return (
     <ToastProvider>
-      <RouterProvider router={router} />
+      <ErrorBoundary>
+        <RouterProvider router={router} />
+      </ErrorBoundary>
       <ServiceWorkerUpdater />
     </ToastProvider>
   )

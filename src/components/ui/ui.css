@@ -24,7 +24,7 @@
   background: var(--gradient-primary);
   border-radius: var(--radius-xxl);
   padding: var(--sp-xxl);
-  color: #fff;
+  color: var(--color-on-accent);
 }
 
 /* Buttons */
@@ -50,11 +50,11 @@
 }
 .ui-btn--primary {
   background: var(--color-primary);
-  color: #fff;
+  color: var(--color-on-accent);
 }
 .ui-btn--gradient {
   background: var(--gradient-primary);
-  color: #fff;
+  color: var(--color-on-accent);
   box-shadow: var(--shadow-button);
 }
 .ui-btn--outlined {
@@ -64,7 +64,7 @@
 }
 .ui-btn--danger {
   background: var(--color-negative);
-  color: #fff;
+  color: var(--color-on-accent);
 }
 .ui-btn--ghost {
   background: transparent;
@@ -94,7 +94,7 @@
 .ui-sheet-overlay {
   position: fixed;
   inset: 0;
-  background: rgb(15 23 42 / 0.45);
+  background: var(--color-scrim);
   z-index: 40;
 }
 .ui-sheet-content {
@@ -171,7 +171,7 @@
 .ui-dialog-overlay {
   position: fixed;
   inset: 0;
-  background: rgb(15 23 42 / 0.45);
+  background: var(--color-scrim);
   z-index: 60;
   display: flex;
   align-items: center;
@@ -258,7 +258,7 @@
 }
 .ui-chip--active {
   background: var(--color-primary);
-  color: #fff;
+  color: var(--color-on-accent);
 }
 .ui-chip--outlined {
   background: var(--color-surface);
@@ -322,7 +322,7 @@
 .ui-segmented > button[data-active="true"] {
   background: var(--color-surface);
   color: var(--color-text-main);
-  box-shadow: 0 1px 3px rgb(15 23 42 / 0.08);
+  box-shadow: var(--shadow-raised);
 }
 
 /* Month navigator */
@@ -402,8 +402,8 @@
   padding: 0 var(--sp-lg);
 }
 .ui-toast {
-  background: var(--color-text-main);
-  color: #fff;
+  background: var(--color-inverse-surface);
+  color: var(--color-on-inverse);
   padding: var(--sp-md) var(--sp-xl);
   border-radius: var(--radius-md);
   font-size: 14px;

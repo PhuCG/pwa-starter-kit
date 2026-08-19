@@ -36,7 +36,7 @@ export function Shell() {
             onClick={() => setCreateOpen(true)}
             aria-label={t('noteAddTitle')}
           >
-            <AppIcon name="plus" size={26} color="#fff" strokeWidth={2.2} />
+            <AppIcon name="plus" size={26} color="var(--color-on-accent)" strokeWidth={2.2} />
           </button>
           <TabLink {...TABS[1]} label={t(TABS[1].labelKey)} />
         </div>

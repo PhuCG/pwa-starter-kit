@@ -1,5 +1,6 @@
 import { db } from '@/db/db'
 import { flushWrites, loadAll } from '@/db/repo'
+import { serializeBackup } from '@/domain/backup'
 import { DomainConstraintError } from '@/domain/constraints'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import { useAppStore } from './appStore'
@@ -66,6 +67,41 @@ describe('notes', () => {
 
     expect(useAppStore.getState().notes).toEqual([])
     expect((await loadAll()).notes).toEqual([])
+  })
+})
+
+describe('backup', () => {
+  it('round-trips the whole app state through a file', async () => {
+    const store = useAppStore.getState()
+    store.completeOnboarding('Phu')
+    store.addNote({ title: 'keep me', body: 'body', date: '2026-08-19' })
+    const json = serializeBackup({
+      exportedAt: '2026-08-19T10:00:00.000Z',
+      data: useAppStore.getState().backupPayload(),
+    })
+
+    // Wipe everything the way a cleared browser would.
+    useAppStore.getState().removeNote(useAppStore.getState().notes[0]?.id ?? '')
+    await flushWrites()
+    expect(useAppStore.getState().notes).toEqual([])
+
+    const result = await useAppStore.getState().restoreBackup(json)
+
+    expect(result.ok).toBe(true)
+    expect(useAppStore.getState().notes.map((n) => n.title)).toEqual(['keep me'])
+    expect(useAppStore.getState().profile.userName).toBe('Phu')
+    expect((await loadAll()).notes.map((n) => n.title)).toEqual(['keep me'])
+  })
+
+  it('leaves existing data untouched when the file is rejected', async () => {
+    useAppStore.getState().addNote({ title: 'mine', body: '' })
+    await flushWrites()
+
+    const result = await useAppStore.getState().restoreBackup('{"format":"nope"}')
+
+    expect(result).toMatchObject({ ok: false, reason: 'not-a-backup' })
+    expect(useAppStore.getState().notes.map((n) => n.title)).toEqual(['mine'])
+    expect((await loadAll()).notes).toHaveLength(1)
   })
 })
 

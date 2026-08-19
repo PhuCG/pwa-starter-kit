@@ -41,7 +41,13 @@ export default function HomePage() {
       ) : (
         <div style={{ display: 'grid', gap: 'var(--sp-md)' }}>
           {notes.map((note) => (
-            <Card key={note.id} onClick={() => setEditing(note)}>
+            // Card without `onClick`, with two sibling buttons inside.
+            // `<Card onClick>` renders a <button>, and a second button nested in
+            // it is invalid HTML — browsers disagree about which one a tap hits,
+            // and a screen reader announces one control where there are two. A
+            // row with its own secondary action gets two real targets rather
+            // than a click swallowed by stopPropagation.
+            <Card key={note.id}>
               <div
                 style={{
                   display: 'flex',
@@ -50,23 +56,40 @@ export default function HomePage() {
                   width: '100%',
                 }}
               >
-                {note.pinned ? <AppIcon name="pin" size={16} color="var(--color-primary)" /> : null}
-                <div style={{ flex: 1, textAlign: 'left', minWidth: 0 }}>
-                  <div className="text-title-s">{note.title}</div>
-                  <div className="text-body-s" style={{ color: 'var(--color-text-sub)' }}>
-                    {new Intl.DateTimeFormat(i18n.language, {
-                      day: '2-digit',
-                      month: 'short',
-                    }).format(new Date(note.createdAt))}
-                  </div>
-                </div>
+                <button
+                  type="button"
+                  onClick={() => setEditing(note)}
+                  style={{
+                    flex: 1,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 'var(--sp-sm)',
+                    textAlign: 'left',
+                    minWidth: 0,
+                  }}
+                >
+                  {note.pinned ? (
+                    <AppIcon name="pin" size={16} color="var(--color-primary)" />
+                  ) : null}
+                  <span style={{ minWidth: 0 }}>
+                    <span className="text-title-s" style={{ display: 'block' }}>
+                      {note.title}
+                    </span>
+                    <span
+                      className="text-body-s"
+                      style={{ display: 'block', color: 'var(--color-text-sub)' }}
+                    >
+                      {new Intl.DateTimeFormat(i18n.language, {
+                        day: '2-digit',
+                        month: 'short',
+                      }).format(new Date(note.createdAt))}
+                    </span>
+                  </span>
+                </button>
                 <button
                   type="button"
                   aria-label={t('actionDelete')}
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    setPendingDelete(note)
-                  }}
+                  onClick={() => setPendingDelete(note)}
                 >
                   <AppIcon name="delete" size={18} color="var(--color-text-muted)" />
                 </button>

@@ -31,6 +31,26 @@
       crossorigin
     />
     <title>PWA Starter</title>
+    <!-- Resolve the colour scheme BEFORE the first paint. Without this the page
+         renders light for as long as the JS bundle takes to arrive, and a dark-
+         mode user gets a white flash on every cold start. Deliberately inline
+         and dependency-free: a deferred or imported script is already too late.
+         Mirrors resolveTheme() in src/lib/theme.ts — `npm run init` rewrites the
+         storage key in both places, so never edit this key by hand. -->
+    <script>
+      (function () {
+        try {
+          var saved = localStorage.getItem('app_v1_theme')
+          var dark =
+            saved === 'dark' ||
+            ((!saved || saved === 'system') &&
+              matchMedia('(prefers-color-scheme: dark)').matches)
+          document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light')
+        } catch (e) {
+          document.documentElement.setAttribute('data-theme', 'light')
+        }
+      })()
+    </script>
   </head>
   <body>
     <div id="root"></div>

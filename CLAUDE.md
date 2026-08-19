@@ -126,6 +126,7 @@ installability and viewport layer.
 | `constraints` | All invariants + assert helpers (rule 2) |
 | `types` | The persisted shapes |
 | `dates` | `yyyy-MM-dd` / `yyyy-MM` key math (padded keys compare with `<`/`>`) |
+| `backup` | Backup file format, serialization, full validation of an uploaded file |
 | `<yours>` | <what it owns> |
 
 ## Key facts
@@ -146,4 +147,12 @@ installability and viewport layer.
   assumed. Do not reintroduce document scrolling.
 - **The service worker updates itself** and explains the reload — see
   `src/pwa/ServiceWorkerUpdater.tsx`.
+- **A backup file is validated in full before any of it is applied.** `replaceAll` is
+  the one awaited, throwing write in the app: a half-applied restore is worse than a
+  failed one.
+- **Dark theme keys off `data-theme` only.** Never add a `prefers-color-scheme` media
+  query to CSS — `src/lib/theme.ts` is the single place the OS preference is read, and
+  a second reader would disagree with it the moment a user picks a theme by hand.
+- **A render crash is caught** by `ErrorBoundary` per route (keyed on the pathname, so
+  navigating away recovers) and once around the router.
 - Deploy: Vercel — `vercel.json` has the SPA rewrite and the SW no-cache headers.

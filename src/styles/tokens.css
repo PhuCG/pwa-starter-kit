@@ -23,6 +23,21 @@
   --color-border: #e2e8f0;
   --color-border-strong: #cbd5e1;
 
+  /* ── On-accent ──
+     Text and icons that sit ON a saturated fill (primary, gradient, danger).
+     A token rather than a literal #fff because it must NOT invert in dark
+     mode — the fill underneath stays saturated, so the contrast is already
+     right and flipping it would make it unreadable. */
+  --color-on-accent: #ffffff;
+
+  /* ── Inverse ──
+     The toast and anything else that deliberately contrasts with the page. */
+  --color-inverse-surface: #0f172a;
+  --color-on-inverse: #ffffff;
+
+  /* ── Scrim ── behind sheets and dialogs. */
+  --color-scrim: rgb(15 23 42 / 0.45);
+
   /* ── Status ── */
   --color-success: #10b981;
   --color-error: #ef4444;
@@ -64,6 +79,9 @@
   --shadow-card-hover: 0 8px 24px -4px rgb(79 70 229 / 0.15);
   --shadow-button: 0 4px 12px 0 rgb(79 70 229 / 0.28);
   --shadow-floating: 0 8px 24px -4px rgb(15 23 42 / 0.1), 0 2px 8px 0 rgb(15 23 42 / 0.05);
+  /* The lift under a selected segment — small enough that it needs its own
+     token rather than reusing --shadow-card, which would swamp it. */
+  --shadow-raised: 0 1px 3px rgb(15 23 42 / 0.08);
 
   /* ── Spacing scale ── */
   --sp-xxs: 2px;
@@ -96,6 +114,83 @@
 
   /* ── Font ── */
   --font-sans: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+/* ── Dark theme ──────────────────────────────────────────────────────────────
+   Only ONE selector, `[data-theme="dark"]`, and never a bare
+   `prefers-color-scheme` media query. `src/lib/theme.ts` resolves the user's
+   preference (system / light / dark) into that attribute, and an inline script
+   in `index.html` writes it before the first paint so a dark-mode user never
+   sees a white flash.
+
+   The consequence to respect: a media query here would silently disagree with
+   the attribute the moment someone picks "light" on a dark OS. One source of
+   truth is the whole point.
+
+   What does NOT change: --color-on-accent, the gradients, and the spacing /
+   radius / type scales. The saturated fills stay saturated, so white-on-fill is
+   still correct, and geometry has no business changing with a colour scheme. */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --color-background: #0b1120;
+  --color-surface: #151d2e;
+  --color-surface-variant: #1e293b;
+  /* Lifted from the light indigo: #4f46e5 on a near-black surface fails
+     contrast for text and reads as muddy for icons. */
+  --color-primary: #818cf8;
+  --color-secondary: #a78bfa;
+
+  --color-text-main: #e2e8f0;
+  --color-text-sub: #94a3b8;
+  --color-text-muted: #64748b;
+
+  --color-border: #1e293b;
+  --color-border-strong: #334155;
+
+  --color-inverse-surface: #e2e8f0;
+  --color-on-inverse: #0f172a;
+  /* Darker and heavier than the light scrim: the surface it dims is already
+     dark, so 0.45 of slate would barely register as a layer. */
+  --color-scrim: rgb(0 0 0 / 0.66);
+
+  --color-success: #34d399;
+  --color-error: #f87171;
+  --color-warning: #fbbf24;
+  --color-info: #60a5fa;
+
+  --color-positive: #34d399;
+  --color-positive-light: #064e3b;
+  --color-negative: #f87171;
+  --color-negative-light: #7f1d1d;
+  --color-neutral: #94a3b8;
+
+  --chart-1: #a78bfa;
+  --chart-2: #fb923c;
+  --chart-3: #2dd4bf;
+  --chart-4: #fbbf24;
+  --chart-5: #818cf8;
+  --chart-6: #94a3b8;
+  --chart-7: #34d399;
+  --chart-1-light: #3b2d63;
+  --chart-2-light: #5c2c0d;
+  --chart-3-light: #134e4a;
+  --chart-4-light: #4a3210;
+  --chart-5-light: #2b2f5e;
+  --chart-6-light: #1e293b;
+  --chart-7-light: #064e3b;
+
+  --gradient-background: linear-gradient(135deg, #1e1b4b, #2e1065);
+  --gradient-dark-cta: linear-gradient(135deg, #1e1b4b, #0f172a);
+
+  /* Shadows carry almost no signal on a dark surface — depth there comes from
+     the surface being lighter than the page. Kept deep and soft so elevation
+     still reads on the overlays that float above everything. */
+  --shadow-card: 0 4px 16px 0 rgb(0 0 0 / 0.4);
+  --shadow-card-hover: 0 8px 24px -4px rgb(0 0 0 / 0.5);
+  --shadow-button: 0 4px 12px 0 rgb(49 46 129 / 0.5);
+  --shadow-floating: 0 8px 24px -4px rgb(0 0 0 / 0.55), 0 2px 8px 0 rgb(0 0 0 / 0.4);
+  --shadow-raised: 0 1px 3px rgb(0 0 0 / 0.4);
 }
 
 /* ── Typography utility classes (mobile textTheme tokens) ── */

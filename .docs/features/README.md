@@ -18,6 +18,7 @@ Một dòng "✅ / —" là **nợ kỹ thuật**, không phải trạng thái b
 | Main shell (bottom nav + FAB) | `/` `/settings` | ✅ | — |
 | Khóa viewport (không kéo rê, không zoom, `#root` là container cuộn) | toàn app | ✅ | — |
 | Onboarding | `/onboarding` | ✅ | — |
+| Bắt lỗi render (ErrorBoundary theo route + toàn app) | toàn app | ✅ | — |
 
 ## Tính năng chính
 
@@ -31,6 +32,8 @@ Một dòng "✅ / —" là **nợ kỹ thuật**, không phải trạng thái b
 |---|---|---|
 | PWA: cài đặt & tự cập nhật | ✅ | — |
 | Độ bền dữ liệu (`storage.persist`, báo lỗi ghi) | ✅ | — |
+| Sao lưu / khôi phục JSON (validate toàn file trước khi áp) | ✅ | — |
+| Dark theme (system / sáng / tối, không chớp khi tải) | ✅ | — |
 | Đa ngôn ngữ (vi/en) + test toàn vẹn catalog | ✅ | — |
 
 ## Cố ý không làm
@@ -38,4 +41,4 @@ Một dòng "✅ / —" là **nợ kỹ thuật**, không phải trạng thái b
 | Tính năng | Lý do |
 |---|---|
 | Đăng nhập / tài khoản | Local-first, không backend |
-| Dark theme | <chưa làm / không cần> |
+| Đồng bộ nhiều thiết bị | Xem [ADR 001](../decisions/001-local-first-no-backend.md) |

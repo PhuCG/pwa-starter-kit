@@ -47,5 +47,9 @@ Mỗi lần thay đổi hành vi tính năng, doc phải đi cùng commit đó �
 Liệt kê những điểm dự án **cố ý** làm khác thông lệ, để không ai "sửa lại cho đúng":
 
 - **Local-first, không backend.** Không auth, không đồng bộ. Guard chỉ kiểm tra
-  `hasCompletedOnboarding`.
+  `hasCompletedOnboarding`. Xem [ADR 001](./decisions/001-local-first-no-backend.md).
+- **File sao lưu JSON là bản duy nhất người dùng sở hữu.** Một file phải hợp lệ
+  *toàn bộ* mới được áp — không khôi phục một nửa.
+- **Dark theme chỉ đọc từ `data-theme`**, không dùng `prefers-color-scheme` trong CSS.
+  Lý do và cách hoạt động: [theme/design-system.md](./theme/design-system.md).
 - **<Điểm khác biệt khác — xóa dòng này nếu không có.>**

@@ -1,3 +1,4 @@
+import { ErrorBoundary } from '@/components/ErrorBoundary'
 import { RouteSkeleton } from '@/components/ui'
 import { Shell } from '@/features/shell/Shell'
 import { useAppStore } from '@/store/appStore'
@@ -31,10 +32,14 @@ function Guard() {
   if (hasCompletedOnboarding && location.pathname === '/onboarding') {
     return <Navigate to="/" replace />
   }
+  // Keyed on the path, so navigating away from a crashed screen recovers
+  // without a reload — which an installed PWA has no address bar to offer.
   return (
-    <Suspense fallback={<RouteSkeleton />}>
-      <Outlet />
-    </Suspense>
+    <ErrorBoundary resetKey={location.pathname}>
+      <Suspense fallback={<RouteSkeleton />}>
+        <Outlet />
+      </Suspense>
+    </ErrorBoundary>
   )
 }
 

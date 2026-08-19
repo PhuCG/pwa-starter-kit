@@ -20,14 +20,14 @@ export type AppLocale = (typeof SUPPORTED_LOCALES)[number]
 
 const RESOURCES: Record<AppLocale, Record<string, string>> = { vi, en }
 
-const isSupported = (v: string): v is AppLocale =>
+export const isSupportedLocale = (v: string): v is AppLocale =>
   (SUPPORTED_LOCALES as readonly string[]).includes(v)
 
 export function detectLocale(saved: string | null): AppLocale {
-  if (saved && isSupported(saved)) return saved
+  if (saved && isSupportedLocale(saved)) return saved
   const nav = typeof navigator !== 'undefined' ? navigator.language : APP.defaultLocale
   const short = nav.slice(0, 2)
-  if (isSupported(short)) return short
+  if (isSupportedLocale(short)) return short
   return APP.defaultLocale as AppLocale
 }
 

@@ -139,6 +139,10 @@ function apply(cfg) {
       `<meta name="apple-mobile-web-app-title" content="${cfg.shortName}" />`,
     ],
     [/<title>[^<]*<\/title>/, `<title>${cfg.name}</title>`],
+    // The no-flash theme script reads localStorage before any module loads, so
+    // it carries its own copy of the storage key. Rewriting it here is what
+    // keeps it from reading the previous project's preference.
+    [/localStorage\.getItem\('[^']*_theme'\)/, `localStorage.getItem('${snake}_v1_theme')`],
   ])
 
   rewrite('src/styles/tokens.css', [
@@ -181,8 +185,9 @@ Done. Next:
 
   1. Replace the icons in public/ (pwa-*.png, maskable-icon-512x512.png,
      apple-touch-icon-180x180.png, favicon.ico) — they are still the starter's.
-  2. Open src/styles/tokens.css and set the rest of the palette. --color-primary
-     is done; --color-secondary and --gradient-primary are not.
+  2. Open src/styles/tokens.css and finish the palette. Only --color-primary in
+     the light block was rewritten — --color-secondary, --gradient-primary, the
+     whole [data-theme="dark"] block, and APP.backgroundColorDark are not.
   3. Replace the Note example: src/domain/types.ts, src/db/db.ts, src/db/repo.ts,
      the notes slice of src/store/appStore.ts, and src/features/home/.
   4. Rewrite CLAUDE.md's "Domain modules" table and the placeholders in .docs/.
