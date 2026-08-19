@@ -155,4 +155,11 @@ installability and viewport layer.
   a second reader would disagree with it the moment a user picks a theme by hand.
 - **A render crash is caught** by `ErrorBoundary` per route (keyed on the pathname, so
   navigating away recovers) and once around the router.
+- **The manifest's `id` is the app's identity and must never change after ship.** With
+  no `id` the browser falls back to `start_url`, so changing `start_url` later turns an
+  installed app into a *different* app: existing users get a duplicate icon and their
+  IndexedDB is left behind on the old identity. Same for `dbName` in `app.config.ts`.
+- **Manifest screenshots are not decoration.** Chrome on Android shows the rich install
+  dialog only when screenshots with a `form_factor` are declared; without them the user
+  gets the dismissible mini-infobar. They are excluded from the SW precache.
 - Deploy: Vercel — `vercel.json` has the SPA rewrite and the SW no-cache headers.

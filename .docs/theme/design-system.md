@@ -49,8 +49,22 @@ sources would disagree silently. Instead:
    `<meta name="theme-color">` tag with it — on an installed PWA that tag is the status
    bar colour.
 2. An **inline script in `index.html`** runs before the first paint and sets the same
-   attribute; without it a dark-mode user gets a white flash on every cold start. That
-   script keeps its own copy of the storage key — `npm run init` rewrites both.
+   attribute *and* the `theme-color` tag; without it a dark-mode user gets a white flash
+   on every cold start and a light status bar until the bundle arrives. That script
+   keeps its own copies of the storage key and both colours — `npm run init` rewrites
+   all of them.
+
+The common alternative is a declarative pair of tags:
+
+```html
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0b1120" />
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#4f46e5" />
+```
+
+That needs no script at all, and it is the right answer for an app with no in-app theme
+setting. It is not the right answer here: the pair can only follow the OS, so it has no
+way to honour a user who chose the opposite theme in Settings. One tag written from the
+same resolved value is correct in both cases.
 
 Three token groups deliberately do **not** change with the scheme:
 

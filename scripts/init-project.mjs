@@ -117,6 +117,13 @@ function rewrite(relPath, edits) {
   console.log(`  wrote ${relPath}`)
 }
 
+/**
+ * Dark-theme status-bar colour. Not asked for interactively — the whole dark
+ * palette needs designing by hand anyway (step 2 of the checklist below), and
+ * one prompt for one of its values would imply the rest were handled.
+ */
+const DARK_BACKGROUND = '#0b1120'
+
 function apply(cfg) {
   const snake = toSnake(cfg.slug)
   const esc = (s) => s.replace(/'/g, "\\'")
@@ -144,10 +151,15 @@ function apply(cfg) {
       `<meta name="apple-mobile-web-app-title" content="${cfg.shortName}" />`,
     ],
     [/<title>[^<]*<\/title>/, `<title>${cfg.name}</title>`],
-    // The no-flash theme script reads localStorage before any module loads, so
-    // it carries its own copy of the storage key. Rewriting it here is what
-    // keeps it from reading the previous project's preference.
+    // The no-flash theme script runs before any module loads, so it carries its
+    // own copies of the storage key and both theme colours. Rewriting them here
+    // is what keeps a new project from reading the previous one's preference,
+    // or flashing the starter's indigo in the status bar.
     [/localStorage\.getItem\('[^']*_theme'\)/, `localStorage.getItem('${snake}_v1_theme')`],
+    [
+      /dark \? '#[0-9a-fA-F]{6}' : '#[0-9a-fA-F]{6}'/,
+      `dark ? '${DARK_BACKGROUND}' : '${cfg.color}'`,
+    ],
   ])
 
   rewrite('src/styles/tokens.css', [

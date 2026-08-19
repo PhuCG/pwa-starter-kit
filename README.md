@@ -30,7 +30,7 @@ fill in the `<placeholder>` sections in `CLAUDE.md` and `.docs/`.
 | Layer | Contents |
 |---|---|
 | **Build** | Vite 6, strict TypeScript (`noUncheckedIndexedAccess`), Biome (lint + format), Vitest + jsdom + fake-indexeddb, `npm run check` runs all three |
-| **PWA** | vite-plugin-pwa, a service worker that updates itself and explains the reload, install card (Android/iOS), viewport lock, measured iOS keyboard insets |
+| **PWA** | vite-plugin-pwa, a service worker that updates itself and explains the reload, install card (Android/iOS), viewport lock, measured iOS keyboard insets, a manifest with `id` / screenshots / shortcuts / `launch_handler` |
 | **Data** | Dexie (`src/db/db.ts`), a repo that is the only Dexie caller, write failures surfaced rather than swallowed, `navigator.storage.persist()`, JSON backup/restore with full-file validation |
 | **State** | zustand, hydration as a state machine (`idle/loading/ready/error`) with retry, memoised selectors |
 | **Domain** | Pure TypeScript, `constraints.ts` centralising every invariant, `dates.ts` for `yyyy-MM-dd` key math |
@@ -39,7 +39,7 @@ fill in the `<placeholder>` sections in `CLAUDE.md` and `.docs/`.
 | **Resilience** | `ErrorBoundary` per route (navigating away recovers) plus one around the router |
 | **i18n** | i18next + ICU, two sample locales, a test that catches missing keys, dead copy, locale drift and emoji |
 | **Docs** | `.docs/` with templates for features, app flows, ADRs and the design system |
-| **Process** | `CLAUDE.md` (rules + workflow), `.claude/launch.json`, GitHub Actions CI |
+| **Process** | `CLAUDE.md` (rules + workflow), `.claude/launch.json`, `.vscode/` (Biome as formatter, recommended extensions), GitHub Actions CI |
 | **Deploy** | `vercel.json` — SPA rewrite plus cache headers for the service worker, assets and fonts |
 
 ## Commands

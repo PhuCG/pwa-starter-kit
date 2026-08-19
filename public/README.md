@@ -24,6 +24,28 @@ Generating all six from one 1024×1024 source:
 npx pwa-asset-generator icon.png public --icon-only --favicon --opaque false
 ```
 
+## Screenshots — replace these too
+
+`screenshots/narrow.png` (1080x1920) and `screenshots/wide.png` (1920x1080) are
+placeholders. They are not decoration: **Chrome on Android only shows the rich install
+dialog — the large one carrying the app name, description and images — when the manifest
+declares screenshots with a `form_factor`.** Without them the user gets the dismissible
+mini-infobar instead, which is the difference between an install and a shrug.
+
+`vite.config.ts` declares the sizes, so replacing a file with a differently-sized image
+means updating the `sizes` string with it. They are excluded from the service-worker
+precache (`globIgnores`), because the running app never loads them and precaching would
+put megabytes into every install.
+
+Capture real ones once the app has content worth showing:
+
+```bash
+npm run build && npm run preview
+```
+
+Then in the browser's device toolbar, set 1080x1920 (narrow) and 1920x1080 (wide) and
+take a full-page screenshot of each.
+
 ## Fonts
 
 `fonts/` holds Plus Jakarta Sans (SIL Open Font License) as woff2, self-hosted and
